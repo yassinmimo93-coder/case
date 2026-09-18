@@ -1,0 +1,5798 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>THE CASE — مين المتهم؟</title>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+
+<style>
+*{
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+    --bg:#08090d;
+    --panel:#11131a;
+    --panel2:#171a23;
+    --border:#292d39;
+    --text:#f1f3f7;
+    --muted:#9298a6;
+    --accent:#c9a86a;
+    --accent2:#8d6f3e;
+    --danger:#d65b5b;
+    --success:#62b883;
+    --shadow:0 15px 50px rgba(0,0,0,.45);
+}
+
+html,body{
+    margin:0;
+    padding:0;
+    width:100%;
+    min-height:100%;
+    background:var(--bg);
+    color:var(--text);
+    font-family:Tahoma,Arial,sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 50% -10%,rgba(201,168,106,.10),transparent 35%),
+        linear-gradient(180deg,#090a0f 0%,#07080b 100%);
+}
+
+button,
+input,
+select{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    width:100%;
+    min-height:100vh;
+    padding:20px;
+}
+
+.screen{
+    display:none;
+    width:100%;
+    max-width:1050px;
+    margin:0 auto;
+    min-height:calc(100vh - 40px);
+}
+
+.screen.active{
+    display:block;
+}
+
+.center-screen{
+    display:none;
+    align-items:center;
+    justify-content:center;
+}
+
+.center-screen.active{
+    display:flex;
+}
+
+.card{
+    background:linear-gradient(180deg,rgba(23,26,35,.97),rgba(13,15,21,.97));
+    border:1px solid var(--border);
+    border-radius:22px;
+    box-shadow:var(--shadow);
+}
+
+.logo-wrap{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo{
+    font-size:clamp(38px,8vw,72px);
+    font-weight:900;
+    letter-spacing:8px;
+    color:#fff;
+    text-shadow:0 0 30px rgba(201,168,106,.12);
+}
+
+.logo-line{
+    width:80px;
+    height:3px;
+    background:var(--accent);
+    margin:12px auto;
+    border-radius:5px;
+}
+
+.subtitle{
+    color:var(--muted);
+    font-size:14px;
+}
+
+.start-card{
+    width:100%;
+    max-width:540px;
+    padding:28px;
+}
+
+h1,h2,h3,p{
+    margin-top:0;
+}
+
+h2{
+    font-size:25px;
+    margin-bottom:8px;
+}
+
+h3{
+    font-size:19px;
+    margin-bottom:10px;
+}
+
+.muted{
+    color:var(--muted);
+}
+
+.form-group{
+    margin-bottom:15px;
+}
+
+label{
+    display:block;
+    margin-bottom:8px;
+    color:#c9ccd4;
+    font-size:14px;
+}
+
+input,
+select{
+    width:100%;
+    border:1px solid var(--border);
+    outline:none;
+    background:#0b0d12;
+    color:var(--text);
+    border-radius:13px;
+    padding:14px 15px;
+    transition:.2s;
+}
+
+input:focus,
+select:focus{
+    border-color:var(--accent2);
+    box-shadow:0 0 0 3px rgba(201,168,106,.08);
+}
+
+button{
+    border:0;
+    border-radius:13px;
+    padding:13px 18px;
+    color:#fff;
+    background:#242832;
+    transition:transform .15s,background .15s,opacity .15s;
+}
+
+button:hover{
+    background:#2d323d;
+}
+
+button:active{
+    transform:scale(.98);
+}
+
+button:disabled{
+    opacity:.45;
+    cursor:not-allowed;
+}
+
+.primary-btn{
+    background:linear-gradient(135deg,#c9a86a,#9b793e);
+    color:#0b0b0c;
+    font-weight:800;
+}
+
+.primary-btn:hover{
+    background:linear-gradient(135deg,#d6b879,#aa884c);
+}
+
+.danger-btn{
+    background:#632d32;
+}
+
+.success-btn{
+    background:#24543b;
+}
+
+.full-btn{
+    width:100%;
+}
+
+.button-row{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+}
+
+.button-row > button{
+    flex:1;
+    min-width:130px;
+}
+
+.status{
+    margin-top:14px;
+    padding:11px 13px;
+    border-radius:11px;
+    background:#10131a;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.7;
+    min-height:0;
+}
+
+.status:empty{
+    display:none;
+}
+
+.status.error{
+    color:#ff9696;
+    border:1px solid rgba(214,91,91,.25);
+    background:rgba(214,91,91,.07);
+}
+
+.status.success{
+    color:#8be0ac;
+    border:1px solid rgba(98,184,131,.25);
+    background:rgba(98,184,131,.07);
+}
+
+.code-box{
+    margin:18px 0;
+    text-align:center;
+    background:#0a0c11;
+    border:1px dashed #4a4f5c;
+    border-radius:16px;
+    padding:17px;
+}
+
+.code-label{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:7px;
+}
+
+.game-code{
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:7px;
+    color:var(--accent);
+    direction:ltr;
+}
+
+.topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:16px;
+}
+
+.topbar-title{
+    font-weight:800;
+    font-size:18px;
+}
+
+.round-badge{
+    color:var(--accent);
+    font-size:13px;
+}
+
+.lobby-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:16px;
+}
+
+.panel{
+    padding:20px;
+}
+
+.panel-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:15px;
+}
+
+.players-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+    max-height:400px;
+    overflow:auto;
+}
+
+.player-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:12px 13px;
+    border-radius:12px;
+    background:#0c0f15;
+    border:1px solid #20242e;
+}
+
+.player-name{
+    font-weight:700;
+}
+
+.player-host{
+    color:var(--accent);
+    font-size:11px;
+}
+
+.case-info{
+    margin-top:14px;
+    padding:14px;
+    background:#0b0d12;
+    border:1px solid #252a34;
+    border-radius:13px;
+    line-height:1.8;
+}
+
+.case-info-title{
+    color:var(--accent);
+    font-weight:800;
+    margin-bottom:5px;
+}
+
+.game-layout{
+    display:grid;
+    grid-template-columns:1fr 330px;
+    gap:16px;
+    align-items:start;
+}
+
+.main-game{
+    padding:22px;
+}
+
+.side-game{
+    padding:18px;
+    position:sticky;
+    top:15px;
+}
+
+.case-title{
+    font-size:28px;
+    font-weight:900;
+    margin-bottom:8px;
+}
+
+.case-story{
+    color:#d6d9df;
+    line-height:2;
+    font-size:15px;
+}
+
+.section{
+    margin-top:22px;
+}
+
+.section-title{
+    font-weight:800;
+    color:var(--accent);
+    margin-bottom:11px;
+}
+
+.evidence-list{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.evidence-item{
+    padding:12px 14px;
+    background:#0c0f14;
+    border:1px solid #232833;
+    border-radius:12px;
+    color:#d7dae0;
+    line-height:1.7;
+}
+
+.role-card{
+    padding:17px;
+    border-radius:15px;
+    background:
+        linear-gradient(135deg,rgba(201,168,106,.08),rgba(255,255,255,.015)),
+        #0c0f14;
+    border:1px solid rgba(201,168,106,.22);
+}
+
+.role-name{
+    font-size:23px;
+    font-weight:900;
+    color:var(--accent);
+    margin-bottom:8px;
+}
+
+.role-description{
+    color:#cdd0d7;
+    line-height:1.8;
+}
+
+.secret-box{
+    margin-top:13px;
+    padding:13px;
+    border-radius:12px;
+    background:rgba(214,91,91,.06);
+    border:1px solid rgba(214,91,91,.18);
+}
+
+.secret-label{
+    color:#ff9898;
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:6px;
+}
+
+.secret-text{
+    color:#e2caca;
+    line-height:1.8;
+}
+
+.script-box{
+    margin-top:13px;
+    padding:15px;
+    border-radius:12px;
+    background:#11151d;
+    border:1px solid #252b37;
+}
+
+.script-label{
+    color:#9bb7d2;
+    font-size:12px;
+    font-weight:800;
+    margin-bottom:7px;
+}
+
+.script-text{
+    color:#e0e3e8;
+    line-height:2;
+}
+
+.timer{
+    text-align:center;
+    padding:15px;
+    background:#0b0d12;
+    border:1px solid #252a34;
+    border-radius:15px;
+    margin-bottom:13px;
+}
+
+.timer-label{
+    color:var(--muted);
+    font-size:12px;
+    margin-bottom:4px;
+}
+
+.timer-value{
+    direction:ltr;
+    font-size:34px;
+    font-weight:900;
+    letter-spacing:2px;
+    color:#fff;
+}
+
+.timer-value.warning{
+    color:#e5a86c;
+}
+
+.timer-value.danger{
+    color:#e16b6b;
+}
+
+.vote-grid{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:9px;
+}
+
+.vote-btn{
+    width:100%;
+    text-align:right;
+    background:#171b24;
+    border:1px solid #2a303c;
+}
+
+.vote-btn:hover{
+    border-color:var(--accent2);
+}
+
+.vote-btn.voted{
+    opacity:.45;
+}
+
+.vote-status{
+    margin-top:12px;
+}
+
+.result-card{
+    padding:26px;
+}
+
+.result-header{
+    text-align:center;
+    margin-bottom:22px;
+}
+
+.result-icon{
+    font-size:45px;
+    margin-bottom:7px;
+}
+
+.result-title{
+    font-size:30px;
+    font-weight:900;
+}
+
+.result-message{
+    color:#c8ccd4;
+    line-height:1.8;
+}
+
+.result-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+}
+
+.result-box{
+    padding:17px;
+    background:#0c0f14;
+    border:1px solid #242934;
+    border-radius:15px;
+}
+
+.result-box-title{
+    color:var(--accent);
+    font-weight:800;
+    margin-bottom:9px;
+}
+
+.score-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+}
+
+.score-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:10px 12px;
+    border-radius:10px;
+    background:#11151c;
+}
+
+.score-points{
+    color:var(--accent);
+    font-weight:900;
+}
+
+.vote-details{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+}
+
+.vote-detail{
+    padding:9px 11px;
+    border-radius:9px;
+    background:#11151c;
+    color:#cfd3da;
+    font-size:13px;
+}
+
+.empty{
+    color:var(--muted);
+    padding:10px 0;
+    font-size:13px;
+}
+
+.hidden{
+    display:none !important;
+}
+
+.divider{
+    height:1px;
+    background:#222630;
+    margin:18px 0;
+}
+
+.small{
+    font-size:12px;
+}
+
+.role-detective{
+    border-color:rgba(110,160,220,.35);
+}
+
+.role-accused{
+    border-color:rgba(214,91,91,.35);
+}
+
+.role-suspect{
+    border-color:rgba(201,168,106,.22);
+}
+
+.connection-dot{
+    display:inline-block;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    background:#777;
+    margin-left:6px;
+}
+
+.connection-dot.online{
+    background:var(--success);
+    box-shadow:0 0 10px rgba(98,184,131,.5);
+}
+
+@media(max-width:800px){
+    .app{
+        padding:12px;
+    }
+
+    .screen{
+        min-height:calc(100vh - 24px);
+    }
+
+    .lobby-grid,
+    .game-layout,
+    .result-grid{
+        grid-template-columns:1fr;
+    }
+
+    .side-game{
+        position:static;
+    }
+
+    .topbar{
+        align-items:flex-start;
+    }
+
+    .main-game,
+    .side-game,
+    .panel,
+    .result-card{
+        padding:16px;
+    }
+
+    .case-title{
+        font-size:23px;
+    }
+}
+
+@media(max-width:500px){
+    .start-card{
+        padding:20px;
+    }
+
+    .logo{
+        letter-spacing:4px;
+    }
+
+    .game-code{
+        font-size:27px;
+        letter-spacing:5px;
+    }
+
+    .button-row{
+        flex-direction:column;
+    }
+
+    .button-row > button{
+        width:100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+<!-- =========================
+     HOME SCREEN
+========================= -->
+
+<section id="homeScreen" class="screen active center-screen">
+
+    <div class="start-card card">
+
+        <div class="logo-wrap">
+            <div class="logo">THE CASE</div>
+            <div class="logo-line"></div>
+            <div class="subtitle">مين المتهم؟</div>
+        </div>
+
+        <div class="form-group">
+            <label for="homeName">اسمك</label>
+            <input
+                id="homeName"
+                type="text"
+                maxlength="20"
+                autocomplete="off"
+                placeholder="اكتب اسمك"
+            >
+        </div>
+
+        <div class="button-row">
+            <button
+                id="showCreateBtn"
+                class="primary-btn"
+                type="button"
+            >
+                إنشاء لعبة
+            </button>
+
+            <button
+                id="showJoinBtn"
+                type="button"
+            >
+                دخول لعبة
+            </button>
+        </div>
+
+        <div id="homeStatus" class="status"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     CREATE SCREEN
+========================= -->
+
+<section id="createScreen" class="screen center-screen">
+
+    <div class="start-card card">
+
+        <div class="logo-wrap">
+            <div class="logo" style="font-size:40px;">THE CASE</div>
+            <div class="subtitle">إنشاء غرفة جديدة</div>
+        </div>
+
+        <div class="form-group">
+            <label for="createName">اسمك</label>
+            <input
+                id="createName"
+                type="text"
+                maxlength="20"
+                autocomplete="off"
+                placeholder="اكتب اسمك"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="lobbyCaseSelect">اختار القضية</label>
+            <select id="lobbyCaseSelect"></select>
+        </div>
+
+        <div class="button-row">
+
+            <button
+                id="createGameBtn"
+                class="primary-btn"
+                type="button"
+            >
+                إنشاء الغرفة
+            </button>
+
+            <button
+                id="backHomeFromCreateBtn"
+                type="button"
+            >
+                رجوع
+            </button>
+
+        </div>
+
+        <div id="createStatus" class="status"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     JOIN SCREEN
+========================= -->
+
+<section id="joinScreen" class="screen center-screen">
+
+    <div class="start-card card">
+
+        <div class="logo-wrap">
+            <div class="logo" style="font-size:40px;">THE CASE</div>
+            <div class="subtitle">دخول لعبة</div>
+        </div>
+
+        <div class="form-group">
+            <label for="joinName">اسمك</label>
+            <input
+                id="joinName"
+                type="text"
+                maxlength="20"
+                autocomplete="off"
+                placeholder="اكتب اسمك"
+            >
+        </div>
+
+        <div class="form-group">
+            <label for="joinCode">كود اللعبة</label>
+            <input
+                id="joinCode"
+                type="text"
+                maxlength="6"
+                autocomplete="off"
+                autocapitalize="characters"
+                placeholder="مثال: A7K92P"
+                style="direction:ltr;text-align:center;letter-spacing:5px;font-weight:800;"
+            >
+        </div>
+
+        <div class="button-row">
+
+            <button
+                id="joinGameBtn"
+                class="primary-btn"
+                type="button"
+            >
+                دخول اللعبة
+            </button>
+
+            <button
+                id="backHomeFromJoinBtn"
+                type="button"
+            >
+                رجوع
+            </button>
+
+        </div>
+
+        <div id="joinStatus" class="status"></div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     LOBBY SCREEN
+========================= -->
+
+<section id="lobbyScreen" class="screen">
+
+    <div class="topbar">
+
+        <div>
+            <div class="topbar-title">غرفة الانتظار</div>
+            <div class="round-badge" id="lobbyRoundText">
+                الجولة الأولى
+            </div>
+        </div>
+
+        <button
+            id="leaveLobbyBtn"
+            class="danger-btn"
+            type="button"
+        >
+            خروج
+        </button>
+
+    </div>
+
+
+    <div class="lobby-grid">
+
+        <div class="panel card">
+
+            <div class="panel-title">
+                <h2>اللاعبين</h2>
+                <span
+                    id="playerCount"
+                    class="muted small"
+                >
+                    0 لاعب
+                </span>
+            </div>
+
+            <div
+                id="lobbyPlayers"
+                class="players-list"
+            ></div>
+
+            <div class="divider"></div>
+
+            <div id="lobbyHostControls">
+
+                <div class="form-group">
+                    <label for="lobbyCaseSelect2">
+                        القضية
+                    </label>
+
+                    <select id="lobbyCaseSelect2"></select>
+                </div>
+
+                <button
+                    id="startGameBtn"
+                    class="primary-btn full-btn"
+                    type="button"
+                >
+                    ابدأ التحقيق
+                </button>
+
+            </div>
+
+            <div
+                id="lobbyWaitingText"
+                class="status"
+            >
+                مستني الـHost يبدأ اللعبة...
+            </div>
+
+            <div
+                id="lobbyStatus"
+                class="status"
+            ></div>
+
+        </div>
+
+
+        <div class="panel card">
+
+            <div class="panel-title">
+                <h2>القضية المختارة</h2>
+            </div>
+
+            <div
+                id="lobbyCasePreview"
+                class="case-info"
+            >
+                <div class="case-info-title">
+                    لم يتم اختيار قضية
+                </div>
+
+                <div class="muted">
+                    الـHost هيختار القضية قبل بداية الجولة.
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="code-box">
+
+                <div class="code-label">
+                    كود دخول أصحابك
+                </div>
+
+                <div
+                    id="lobbyGameCode"
+                    class="game-code"
+                >
+                    ------
+                </div>
+
+            </div>
+
+            <div class="small muted" style="line-height:1.8;">
+                ابعت الكود لأصحابك. كل لاعب يدخل من موبايله
+                باستخدام نفس الكود.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     GAME SCREEN
+========================= -->
+
+<section id="gameScreen" class="screen">
+
+    <div class="topbar">
+
+        <div>
+            <div
+                id="gameCaseTitleTop"
+                class="topbar-title"
+            >
+                THE CASE
+            </div>
+
+            <div
+                id="gameRoundText"
+                class="round-badge"
+            >
+                الجولة 1
+            </div>
+        </div>
+
+        <button
+            id="leaveGameBtn"
+            class="danger-btn"
+            type="button"
+        >
+            خروج
+        </button>
+
+    </div>
+
+
+    <div class="game-layout">
+
+        <main class="main-game card">
+
+            <div
+                id="gameCaseTitle"
+                class="case-title"
+            >
+                القضية
+            </div>
+
+            <div
+                id="gameCaseStory"
+                class="case-story"
+            ></div>
+
+
+            <div class="section">
+
+                <div class="section-title">
+                    🔎 الأدلة
+                </div>
+
+                <div
+                    id="evidenceList"
+                    class="evidence-list"
+                ></div>
+
+            </div>
+
+
+            <div class="section">
+
+                <div class="section-title">
+                    🎭 دورك
+                </div>
+
+                <div
+                    id="myRoleCard"
+                    class="role-card"
+                ></div>
+
+            </div>
+
+
+            <div class="section">
+
+                <div class="section-title">
+                    🗳️ التحقيق والتصويت
+                </div>
+
+                <div
+                    id="votePanel"
+                    class="panel"
+                    style="padding:0;background:transparent;border:0;"
+                >
+
+                    <div
+                        id="voteGrid"
+                        class="vote-grid"
+                    ></div>
+
+                    <div
+                        id="voteStatus"
+                        class="status"
+                    ></div>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+        <aside class="side-game card">
+
+            <div class="timer">
+
+                <div class="timer-label">
+                    الوقت المتبقي
+                </div>
+
+                <div
+                    id="timerValue"
+                    class="timer-value"
+                >
+                    15:00
+                </div>
+
+            </div>
+
+
+            <div class="panel" style="padding:0;background:transparent;border:0;">
+
+                <div class="panel-title">
+                    <h3>اللاعبين</h3>
+                    <span
+                        id="gamePlayerCount"
+                        class="muted small"
+                    >
+                        0
+                    </span>
+                </div>
+
+                <div
+                    id="gamePlayersList"
+                    class="players-list"
+                ></div>
+
+            </div>
+
+
+            <div class="divider"></div>
+
+
+            <div
+                id="gameStatus"
+                class="status"
+            ></div>
+
+        </aside>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     RESULT SCREEN
+========================= -->
+
+<section id="resultScreen" class="screen">
+
+    <div class="topbar">
+
+        <div>
+            <div class="topbar-title">
+                نتيجة التحقيق
+            </div>
+
+            <div
+                id="resultRound"
+                class="round-badge"
+            >
+                الجولة 1
+            </div>
+        </div>
+
+    </div>
+
+
+    <div class="result-card card">
+
+        <div class="result-header">
+
+            <div class="result-icon">
+                🔍
+            </div>
+
+            <div class="result-title">
+                الحقيقة ظهرت
+            </div>
+
+            <div
+                id="resultMessage"
+                class="result-message"
+            ></div>
+
+        </div>
+
+
+        <div class="result-grid">
+
+            <div class="result-box">
+
+                <div class="result-box-title">
+                    🎭 المتهم الحقيقي
+                </div>
+
+                <div
+                    id="accusedResult"
+                    style="font-size:22px;font-weight:900;"
+                >
+                    —
+                </div>
+
+            </div>
+
+
+            <div class="result-box">
+
+                <div class="result-box-title">
+                    🕵️ المحقق
+                </div>
+
+                <div
+                    id="resultDetective"
+                    style="font-size:22px;font-weight:900;"
+                >
+                    —
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="result-box">
+
+                <div class="result-box-title">
+                    🏆 النقاط
+                </div>
+
+                <div
+                    id="scoresList"
+                    class="score-list"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <div class="section">
+
+            <div class="result-box">
+
+                <div class="result-box-title">
+                    🗳️ تفاصيل التصويت
+                </div>
+
+                <div
+                    id="voteDetails"
+                    class="vote-details"
+                ></div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="resultHostControls"
+            class="section"
+        >
+
+            <div class="button-row">
+
+                <button
+                    id="nextRoundBtn"
+                    class="primary-btn"
+                    type="button"
+                >
+                    جولة جديدة
+                </button>
+
+                <button
+                    id="backLobbyBtn"
+                    type="button"
+                >
+                    رجوع للـLobby
+                </button>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="resultStatus"
+            class="status"
+        ></div>
+
+    </div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   THE CASE
+   PART 1 — BASIC DATA + CASE DATABASE
+========================================================= */
+
+"use strict";
+
+
+/* =========================
+   HELPERS
+========================= */
+
+const $ = id => document.getElementById(id);
+
+function safeName(name){
+    return String(name || "")
+        .replace(/[<>]/g,"")
+        .trim()
+        .slice(0,20);
+}
+
+function randomCode(){
+    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code = "";
+
+    for(let i=0;i<6;i++){
+        code += chars[Math.floor(Math.random()*chars.length)];
+    }
+
+    return code;
+}
+
+function shuffle(array){
+    const arr = [...array];
+
+    for(let i=arr.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+
+        [arr[i],arr[j]] =
+        [arr[j],arr[i]];
+    }
+
+    return arr;
+}
+
+function escapeHtml(value){
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+function setStatus(id,text,type=""){
+    const el = $(id);
+
+    if(!el) return;
+
+    el.textContent = text || "";
+
+    el.className = "status";
+
+    if(type){
+        el.classList.add(type);
+    }
+}
+
+function showScreen(id){
+    document.querySelectorAll(".screen")
+        .forEach(screen=>{
+            screen.classList.remove("active");
+        });
+
+    const screen = $(id);
+
+    if(screen){
+        screen.classList.add("active");
+    }
+}
+
+
+/* =========================
+   CASE DATABASE
+========================= */
+
+const CASES = [
+
+{
+    title:"القضية 1 — آخر فنجان قهوة",
+    difficulty:"easy",
+
+    story:"في الساعة 11:40 مساءً، اجتمع خمسة أشخاص في كافيه صغير بعد إغلاقه لمناقشة بيع المكان. صاحب الكافيه، كريم، دخل مكتبه ليحسب الإيرادات، وبعد حوالي عشر دقائق سمع الجميع صوت سقوط شيء. عندما دخلوا المكتب وجدوا كريم فاقدًا للوعي بجوار مكتبه، وبجواره فنجان قهوة مكسور. الغريب أن باب المكتب كان مفتوحًا، لكن لا أحد رأى شخصًا يدخل أو يخرج.",
+
+    evidence:[
+        "ساعة المكتب توقفت عند 11:47.",
+        "فنجان القهوة كان يحتوي على بقايا مشروب مُر جدًا.",
+        "كاميرا الممر أظهرت أن الجميع ظلوا في منطقة الكافيه تقريبًا.",
+        "درج المكتب كان مفتوحًا وهناك مبلغ من المال ناقص.",
+        "أحد الأشخاص كان يعرف أن كريم يحتفظ بمفتاح المكتب الاحتياطي."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"أنت المسؤول عن قيادة التحقيق. ركز على توقيت الحادث، القهوة، والمفتاح الاحتياطي.",
+            secret:"الضحية كان قد أخبرك قبل الحادث أنه يشك في أحد الموجودين.",
+            script:"أنت لا تعرف هوية المتهم الحقيقي. اسأل كل شخص أين كان في الساعة 11:47، ومن لمس القهوة أو دخل المكتب، وحاول اكتشاف التناقضات بين أقوالهم."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت الشخص الذي ارتكب الجريمة، لكن لا أحد يعرف ذلك. حاول الحفاظ على قصتك وعدم كشف السر.",
+            secret:"أنت استخدمت المفتاح الاحتياطي ووصلت إلى المكتب قبل أن يراك أحد.",
+            script:"أنكر دخولك المكتب تمامًا. قل إنك كنت في مكانك طوال الوقت، وحاول توجيه الشك نحو الشخص الذي كان يعرف تفاصيل المال أو القهوة."
+        },
+
+        suspects:[
+            {
+                name:"المحاسب",
+                secret:"أنت كنت تعرف أن هناك مبلغًا كبيرًا داخل الدرج، لكنك لم تسرقه.",
+                script:"كنت آخر شخص تحدث مع كريم قبل أن يدخل المكتب. طلب مني أن أراجعه في الحسابات، لكنني قلت له إنني سأفعل ذلك في الصباح. بعد ذلك بقيت في منطقة الكاشير ولم أدخل المكتب."
+            },
+            {
+                name:"النادل",
+                secret:"أنت حضرت القهوة لكريم قبل الحادث.",
+                script:"أنا الذي حضرت فنجان القهوة لكريم، لأن هذا كان طلبه المعتاد. سلمته الفنجان وخرجت، ولم أضع فيه أي شيء. بعد ذلك بقيت أمام الكاونتر."
+            },
+            {
+                name:"صديق كريم",
+                secret:"كنت مدينًا لكريم بمبلغ كبير.",
+                script:"أنا كنت أزور كريم فقط لأتحدث معه عن الدين الذي عليّ. حصل بيننا خلاف، لكنني لم أدخل مكتبه ولم ألمس القهوة."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 2 — مفتاح الشقة",
+    difficulty:"easy",
+
+    story:"تم العثور على رجل يدعى سامح داخل شقته بعد أن أبلغ الجيران عن صوت ارتطام قوي. الشرطة وجدت الباب الرئيسي مغلقًا، لكن القفل لم يكن مكسورًا. كان مع سامح ثلاثة أشخاص في المبنى قبل الحادث، وكل واحد منهم يدعي أنه لم يدخل الشقة.",
+
+    evidence:[
+        "المفتاح الرئيسي كان داخل الشقة.",
+        "هناك نسخة ثانية من المفتاح.",
+        "آثار لمس وُجدت على مقبض الباب.",
+        "أحد الشهود غادر المبنى قبل الحادث بدقائق.",
+        "الهاتف سجل مكالمة لم تكتمل."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"ابحث عن صاحب النسخة الثانية من المفتاح، وراجع توقيت المكالمة.",
+            secret:"أنت لاحظت أن قفل الباب لم يتعرض لأي محاولة كسر.",
+            script:"اسأل الجميع عن علاقتهم بسامح، ومن كان يملك مفتاحًا أو يعرف مكانه، ثم قارن ذلك مع توقيت مغادرة كل شخص."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت تعرف كيف تم دخول الشقة دون كسر الباب.",
+            secret:"كنت تملك معرفة بمكان النسخة الثانية من المفتاح.",
+            script:"حاول إقناع الجميع بأن وجود آثار اللمس على المقبض لا يثبت شيئًا، وركز على الشخص الذي غادر المبنى قبل الحادث."
+        },
+
+        suspects:[
+            {
+                name:"الجارة",
+                secret:"كنت تملكين نسخة قديمة من المفتاح.",
+                script:"سامح طلب مني منذ أشهر أن أحتفظ بنسخة من المفتاح للطوارئ، لكنني لم أستخدمها تلك الليلة. سمعت صوتًا من شقته ثم خرجت إلى الممر."
+            },
+            {
+                name:"صاحب العقار",
+                secret:"أنت كنت تعرف أن القفل يمكن فتحه بطريقة أخرى.",
+                script:"أنا صاحب العقار وأملك مفاتيح الشقق، لكنني لم أدخل شقة سامح تلك الليلة. كنت في الطابق الأرضي عندما سمعت صوت الجيران."
+            },
+            {
+                name:"صديق سامح",
+                secret:"كنت آخر شخص تحدث معه هاتفيًا.",
+                script:"اتصل بي سامح قبل الحادث بدقائق. كان متوترًا وقال إنه يريد أن يخبرني بشيء مهم، لكن المكالمة انقطعت فجأة."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 3 — اللوحة المفقودة",
+    difficulty:"easy",
+
+    story:"أثناء حفل افتتاح معرض فني، اختفت لوحة نادرة من غرفة مغلقة. لم تكن هناك أي علامات كسر، وكانت اللوحة موجودة قبل بداية الحفل بدقائق. أربعة أشخاص فقط كانت لديهم فرصة الاقتراب من الغرفة.",
+
+    evidence:[
+        "الباب لم يُفتح بالقوة.",
+        "جهاز الإنذار تم إيقافه لمدة دقيقتين.",
+        "هناك أثر قفاز على إطار اللوحة.",
+        "شخص واحد يعرف رمز الإنذار.",
+        "اللوحة لم تغادر المبنى من الباب الرئيسي."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"ركز على جهاز الإنذار، القفاز، وكيف خرجت اللوحة من الغرفة.",
+            secret:"أنت لاحظت أن الإنذار توقف قبل اختفاء اللوحة بقليل.",
+            script:"اسأل من كان يعرف رمز الإنذار، ومن اقترب من الغرفة، وهل رأى أحد حقيبة أو جسمًا كبيرًا يتحرك داخل المعرض."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت تعرف كيف أوقفت الإنذار وأخرجت اللوحة.",
+            secret:"أنت تعرف رمز الإنذار منذ فترة.",
+            script:"حاول إقناع الجميع أن إيقاف الإنذار كان بسبب عطل تقني، وأن أثر القفاز لا يعني أنك لمست اللوحة."
+        },
+
+        suspects:[
+            {
+                name:"المنظم",
+                secret:"أنت تعرف رمز الإنذار.",
+                script:"كنت مسؤولًا عن تنظيم المعرض، ولذلك كنت أعرف رمز الإنذار. أوقفته لدقيقتين قبل الحفل بسبب مشكلة تقنية، ثم أعدته للعمل."
+            },
+            {
+                name:"الفنان",
+                secret:"كنت غاضبًا لأن اللوحة لم تُبع.",
+                script:"أنا صاحب اللوحة، وكنت بالفعل غاضبًا لأن السعر لم يعجبني. لكنني لم أسرقها. كنت طوال الوقت تقريبًا أمام الضيوف."
+            },
+            {
+                name:"المصور",
+                secret:"دخلت المنطقة الممنوعة لالتقاط صورة.",
+                script:"دخلت الممر القريب من الغرفة لألتقط صورة، لكنني لم أدخل الغرفة نفسها. عندما عدت كانت اللوحة ما زالت في مكانها."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 4 — المصعد رقم 7",
+    difficulty:"easy",
+
+    story:"في فندق مزدحم، توقف المصعد رقم 7 بين الطابقين الرابع والخامس. بعد عودته للعمل، وجد الموظفون أحد النزلاء مصابًا داخل المصعد. سجل النظام أظهر أن أربعة أشخاص استخدموا المصعد خلال الدقائق السابقة.",
+
+    evidence:[
+        "المصعد توقف لمدة 90 ثانية.",
+        "زر الطوارئ لم يتم الضغط عليه.",
+        "كاميرا الفندق تعطلت لدقيقة واحدة فقط.",
+        "أحد الأشخاص كان يحمل حقيبة كبيرة.",
+        "الهاتف الخاص بالضحية وجد داخل الحقيبة."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"راجع سجل المصعد والكاميرا والحقيبة.",
+            secret:"أنت تعرف أن المصعد لا يتوقف عادة بهذه الطريقة.",
+            script:"اسأل كل شخص عن الحقيبة، وعن مكانه أثناء توقف المصعد، وحاول تحديد من كان يستطيع الوصول إلى الهاتف."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت تعرف سبب وجود الهاتف داخل الحقيبة.",
+            secret:"الحقيبة كانت جزءًا من خطتك لإخفاء دليل.",
+            script:"قل إن الحقيبة كانت معك لأسباب عادية، وحاول جعل الجميع يركزون على تعطل الكاميرا بدلًا من الحقيبة."
+        },
+
+        suspects:[
+            {
+                name:"موظف الفندق",
+                secret:"أنت كنت تحمل حقيبة صيانة.",
+                script:"كنت أتنقل بين الطوابق لإصلاح مشكلة في الفندق. الحقيبة التي معي كانت أدوات صيانة فقط، ولم ألمس النزيل."
+            },
+            {
+                name:"النزيل",
+                secret:"تشاجرت مع الضحية قبل ركوب المصعد.",
+                script:"حدث بيني وبين الضحية خلاف بسيط في الردهة، لكنني لم ألاحقه إلى المصعد. كنت في طابق مختلف بعد ذلك."
+            },
+            {
+                name:"عامل النظافة",
+                secret:"رأيت شخصًا يخرج بسرعة من المصعد.",
+                script:"كنت أنظف الممر عندما توقف المصعد. رأيت شخصًا يخرج منه بسرعة، لكنني لم أستطع رؤية وجهه بوضوح."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 5 — رسالة منتصف الليل",
+    difficulty:"easy",
+
+    story:"في منتصف الليل وصلت رسالة إلى هاتف أربعة أشخاص تقول: «أنا عرفت الحقيقة». بعدها بدقائق تم العثور على مرسل الرسالة فاقدًا للوعي في مكتبه. الرسالة أُرسلت إلى أشخاص يعرفون سرًا مشتركًا.",
+
+    evidence:[
+        "الرسالة أُرسلت 12:03.",
+        "الهاتف لم يتم كسره.",
+        "الكمبيوتر كان مفتوحًا على ملف سري.",
+        "أحد الأشخاص حذف رسالة من هاتفه.",
+        "الضحية كان ينوي كشف سر قديم."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"اكتشف ما هو السر، ومن كان يخاف من ظهوره.",
+            secret:"الضحية كان على وشك كشف معلومة تخص أحد الحاضرين.",
+            script:"اسأل الجميع عن الرسالة المحذوفة والملف السري، ولا تفترض أن صاحب أكبر دافع هو بالضرورة المتهم."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت كنت أكثر شخص يخشى أن ينكشف السر.",
+            secret:"كنت تعرف أن الضحية اكتشف الحقيقة.",
+            script:"حاول تحويل الانتباه إلى الشخص الذي حذف الرسالة، وقل إنك لم تكن تعرف شيئًا عن الملف."
+        },
+
+        suspects:[
+            {
+                name:"الشريك",
+                secret:"كنت تخشى أن يكشف الضحية خطأ ارتكبته.",
+                script:"كنت قلقًا من الملف الذي كان الضحية يحتفظ به، لأنني أعرف أنه يحتوي على معلومات عن عملنا. لكنني لم أذهب إلى مكتبه تلك الليلة."
+            },
+            {
+                name:"الصديق القديم",
+                secret:"أنت كنت تعرف السر قبل الجميع.",
+                script:"أنا أعرف السر منذ سنوات، ولهذا وصلتني الرسالة. كنت أريد أن أتحدث مع الضحية، لكنني لم أره في تلك الليلة."
+            },
+            {
+                name:"الموظف",
+                secret:"حذفت رسالة من هاتفك.",
+                script:"حذفت رسالة لأنني كنت أخشى أن يساء فهمها، لكنها لم تكن مرتبطة بالحادث. كنت بعيدًا عن المكتب وقتها."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 6 — غرفة الفندق 314",
+    difficulty:"medium",
+
+    story:"رجل أعمال وصل إلى فندق لحضور اجتماع مهم، ثم وُجد داخل غرفته بعد ساعة. الغرفة كانت مقفلة من الداخل، لكن سجل بطاقة الدخول كشف أن شخصًا دخل الغرفة قبل الحادث بعشرين دقيقة.",
+
+    evidence:[
+        "بطاقة الدخول استُخدمت مرتين.",
+        "الكاميرا أمام الغرفة كانت تعمل.",
+        "الضحية كان يحمل ظرفًا فارغًا.",
+        "هناك كوب ماء ثانٍ داخل الغرفة.",
+        "الظرف كان يحمل اسم أحد الحاضرين في الاجتماع."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"راجع بطاقة الدخول والظرف وكوب الماء.",
+            secret:"سجل البطاقة يثبت دخول شخص آخر قبل الحادث.",
+            script:"اسأل من كان يعرف الضحية ومن كان ينتظر مقابلته، ثم ركز على الشخص الذي يمكنه تفسير الظرف الفارغ."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت الشخص الذي دخل الغرفة.",
+            secret:"أنت استخدمت بطاقة دخول لم تكن مسجلة باسمك.",
+            script:"أنكر أنك استخدمت البطاقة، وقل إن وجود كوب ماء ثانٍ لا يثبت من كان في الغرفة."
+        },
+
+        suspects:[
+            {
+                name:"المساعد",
+                secret:"أحضرت ظرفًا إلى الغرفة.",
+                script:"دخلت الغرفة لأضع ظرفًا طلبه مني المدير. خرجت بعدها مباشرة، ولم أعرف ماذا حدث لاحقًا."
+            },
+            {
+                name:"المنافس",
+                secret:"كنت تريد الحصول على مستندات الضحية.",
+                script:"كنت على خلاف مهني معه، وكنت أريد معرفة ما يخطط له. لكنني لم أدخل غرفته، وقضيت الوقت في مطعم الفندق."
+            },
+            {
+                name:"موظف الاستقبال",
+                secret:"أصدرت بطاقة دخول إضافية.",
+                script:"أصدرت بطاقة إضافية لأن الضحية قال إنه ينتظر شخصًا. لم أكن أعرف من هو هذا الشخص، وبعدها عدت للعمل."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 7 — القارب الأخير",
+    difficulty:"medium",
+
+    story:"أربعة أصدقاء استقلوا قاربًا في رحلة ليلية. قبل العودة، اختفى صاحب القارب من سطحه. لم يسقط أحد حسب سجل الإنذار، لكن هاتفه وجد على المقعد.",
+
+    evidence:[
+        "إنذار باب القارب لم يعمل لمدة ثلاث دقائق.",
+        "هناك معطف مبلل.",
+        "محرك القارب كان يعمل.",
+        "أحد الأشخاص يعرف كيفية تعطيل الإنذار.",
+        "الهاتف يحتوي على تسجيل صوتي قصير."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"حدد سبب توقف الإنذار وماذا حدث للهاتف.",
+            secret:"التسجيل الصوتي يحتوي على صوت شخص موجود على القارب.",
+            script:"اسأل عن المعطف المبلل، ومن يعرف نظام الإنذار، ومن كان قريبًا من صاحب القارب في آخر دقائق."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت تعرف ماذا حدث على سطح القارب.",
+            secret:"أنت عطلت إنذار الباب لفترة قصيرة.",
+            script:"حاول جعل الجميع يعتقد أن صاحب القارب ربما غادر بنفسه، وابتعد عن الحديث عن نظام الإنذار."
+        },
+
+        suspects:[
+            {
+                name:"الصديق المقرب",
+                secret:"كنت تعرف رمز لوحة التحكم.",
+                script:"كنت أساعد صاحب القارب دائمًا في تشغيله، ولذلك أعرف لوحة التحكم. خلال الرحلة حصل خلاف بيننا، لكنني لم أفعل شيئًا له."
+            },
+            {
+                name:"المصور",
+                secret:"صورت فيديو في الوقت الذي اختفى فيه.",
+                script:"كنت أصور البحر معظم الوقت. عند مراجعة الفيديو لاحظت أن هناك دقائق ناقصة، ولا أعرف كيف حدث ذلك."
+            },
+            {
+                name:"الضيف",
+                secret:"كنت ترتدي معطفًا مختلفًا قبل الحادث.",
+                script:"كان الجو باردًا ولذلك ارتديت معطفي. لا أعرف لماذا وُجد معطف مبلل، لأنني لم أنزل إلى الماء."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 8 — الخزنة الثالثة",
+    difficulty:"medium",
+
+    story:"اختفت مجوهرات من خزنة داخل مكتب شركة. الخزنة لم تُفتح بالقوة، والنظام سجل استخدام الرمز الصحيح. الغريب أن صاحب الشركة نفسه يقول إنه لم يستخدم الرمز تلك الليلة.",
+
+    evidence:[
+        "الرمز استُخدم الساعة 2:16.",
+        "النظام لا يسجل اسم المستخدم.",
+        "بصمة واحدة وُجدت على الخزنة.",
+        "المجوهرات اختفت دون وجود فوضى.",
+        "هناك نسخة من الرمز في ملف قديم."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"اكتشف من عرف الرمز ومن كان يستطيع الوصول للخزنة.",
+            secret:"الرمز لم يتغير منذ عدة أشهر.",
+            script:"اسأل من رأى الرمز ومن كان لديه وصول للمكتب، ثم قارن ذلك بتوقيت فتح الخزنة."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت استخدمت الرمز الصحيح.",
+            secret:"عرفت الرمز من مصدر لم يكن من المفترض أن تراه.",
+            script:"قل إن الرمز كان معروفًا لأكثر من شخص، وحاول التشكيك في قيمة البصمة الموجودة على الخزنة."
+        },
+
+        suspects:[
+            {
+                name:"مدير المكتب",
+                secret:"رأيت الرمز منذ أشهر.",
+                script:"كنت أعمل في المكتب منذ سنوات وأعرف الكثير من إجراءات الأمان. رأيت الرمز مرة بالصدفة، لكنني لم أستخدمه."
+            },
+            {
+                name:"السكرتير",
+                secret:"كان معك مفتاح المكتب.",
+                script:"كان معي مفتاح المكتب لأنني أصل قبل الجميع عادة. دخلت صباحًا فقط ولم ألمس الخزنة."
+            },
+            {
+                name:"الحارس",
+                secret:"الكاميرا توقفت أثناء ورديتك.",
+                script:"الكاميرا توقفت لفترة قصيرة بسبب عطل في النظام. أبلغت الإدارة بذلك، لكنني لم أغادر موقعي."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 9 — صورة في الظلام",
+    difficulty:"medium",
+
+    story:"خلال حفلة منزلية، انقطعت الكهرباء لمدة أربع دقائق. بعد عودتها، اكتشف الجميع أن أحد الحاضرين فقد ساعة ثمينة. شخص واحد فقط التقط صورًا أثناء الظلام باستخدام هاتفه.",
+
+    evidence:[
+        "آخر صورة قبل انقطاع الكهرباء تظهر الساعة.",
+        "أول صورة بعد عودة الكهرباء لا تظهر الساعة.",
+        "الهاتف كان مضبوطًا على التصوير التلقائي.",
+        "ثلاثة أشخاص كانوا بالقرب من صاحب الساعة.",
+        "هناك صورة محذوفة."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"قارن الصور بتوقيت انقطاع الكهرباء.",
+            secret:"الصورة المحذوفة قد تكون أهم دليل في القضية.",
+            script:"اسأل صاحب الهاتف لماذا حذف الصورة، ومن كان بجوار الساعة لحظة انقطاع الكهرباء."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت استغليت الظلام.",
+            secret:"أنت كنت بالقرب من الساعة عندما انطفأت الأنوار.",
+            script:"قل إن الجميع كانوا قريبين من صاحب الساعة، وحاول جعل المصور محور التحقيق."
+        },
+
+        suspects:[
+            {
+                name:"المصور",
+                secret:"حذفت صورة.",
+                script:"حذفت صورة لأنها كانت سيئة جدًا، لكنني بالفعل كنت أصور أثناء انقطاع الكهرباء. لم أسرق الساعة."
+            },
+            {
+                name:"صاحب المنزل",
+                secret:"كنت تعرف مكان الساعة.",
+                script:"كنت أعرف أن الساعة ثمينة لأن صاحبها أخبرني عنها. أثناء انقطاع الكهرباء بقيت في غرفة المعيشة."
+            },
+            {
+                name:"الضيف الجديد",
+                secret:"لم تكن تعرف أي شخص تقريبًا.",
+                script:"كنت ضيفًا جديدًا ولم أكن أعرف معظم الموجودين. وقفت بالقرب من صاحب الساعة لفترة قصيرة ثم ابتعدت."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 10 — القلم الأزرق",
+    difficulty:"medium",
+
+    story:"مدير شركة كان يستعد لتوقيع عقد مهم، لكنه وجد نفسه أمام عقد مختلف عن النسخة الأصلية. جميع الحاضرين يقولون إنهم لم يلمسوا الأوراق. الشيء الوحيد الغريب هو قلم أزرق ظهر على المكتب.",
+
+    evidence:[
+        "النسخة الأصلية كانت تحتوي على رقم مختلف.",
+        "القلم الأزرق لم يكن موجودًا قبل الاجتماع.",
+        "الطابعة سجلت عملية طباعة إضافية.",
+        "شخص واحد كان يعرف كلمة مرور الكمبيوتر.",
+        "الورق المستخدم في النسخة المزورة من نفس الطابعة."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"حدد من كان يستطيع الوصول إلى الكمبيوتر والطابعة.",
+            secret:"هناك نسخة إضافية مطبوعة قبل الاجتماع.",
+            script:"اسأل عن القلم الأزرق ومن كان يعرف كلمة مرور الكمبيوتر، ثم حاول معرفة من استفاد من تغيير العقد."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت غيّرت نسخة العقد.",
+            secret:"أنت عرفت كلمة مرور الكمبيوتر واستخدمت الطابعة.",
+            script:"حاول إقناع الجميع أن النسخة الإضافية ربما كانت اختبارًا للطباعة، وأن الدافع المالي لا يثبت شيئًا."
+        },
+
+        suspects:[
+            {
+                name:"المحامي",
+                secret:"أنت كنت تعرف تفاصيل العقد.",
+                script:"كنت مسؤولًا عن مراجعة العقد، ولهذا أعرف كل أرقامه. لاحظت الاختلاف فقط عندما بدأ المدير في التوقيع."
+            },
+            {
+                name:"المساعد",
+                secret:"أنت تعرف كلمة مرور الكمبيوتر.",
+                script:"كنت أستخدم كمبيوتر المدير بشكل متكرر، ولذلك أعرف كلمة المرور. لكنني لم أغير العقد ولم أطبع نسخة أخرى."
+            },
+            {
+                name:"الشريك",
+                secret:"كنت ستخسر مبلغًا كبيرًا إذا تم توقيع العقد.",
+                script:"العقد كان سيؤثر على أرباحي، وهذا صحيح، لكنني لم أغير الأوراق. كنت جالسًا بجوار النافذة أثناء الاجتماع."
+            }
+        ]
+    }
+},
+
+/* =========================
+   PART 1 ENDS HERE
+========================= */
+
+{
+    title:"القضية 11 — الفندق بلا كاميرات",
+    difficulty:"hard",
+
+    story:"في فندق قديم، اختفى نزيل من غرفته، ثم ظهر هاتفه في الطابق السفلي. كل كاميرات الفندق توقفت في نفس اللحظة، رغم أن نظام الكهرباء لم يتوقف. أربعة أشخاص كانوا داخل الفندق ويعرفون بعضهم بطريقة غير مباشرة.",
+
+    evidence:[
+        "الكاميرات توقفت لمدة سبع دقائق.",
+        "الهاتف تحرك من الطابق الثالث إلى الأرضي.",
+        "المصعد لم يسجل أي رحلة خلال تلك الفترة.",
+        "درج الطوارئ كان مفتوحًا.",
+        "أحد الأشخاص كان يحمل مفتاحًا عامًا."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"راجع حركة الهاتف، الكاميرات، ودرج الطوارئ.",
+            secret:"التوقف المتزامن للكاميرات ليس عطلًا عاديًا.",
+            script:"اسأل عن غرفة التحكم، والمفتاح العام، ومن كان قادرًا على استخدام درج الطوارئ."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت تعرف لماذا توقفت الكاميرات.",
+            secret:"أنت كنت تعرف نقطة ضعف في نظام المراقبة.",
+            script:"حاول تفسير توقف الكاميرات كعطل تقني، وركز على الشخص الذي يملك المفتاح العام."
+        },
+
+        suspects:[
+            {
+                name:"مدير الفندق",
+                secret:"أنت تملك مفتاحًا عامًا لكل الغرف.",
+                script:"بصفتي المدير أملك مفتاحًا عامًا، وهذا أمر طبيعي. كنت في مكتبي وقت اختفاء النزيل، لكنني أعرف أن الكاميرات تعطلت بطريقة غير معتادة."
+            },
+            {
+                name:"موظف الصيانة",
+                secret:"أنت تعرف غرفة التحكم بالكاميرات.",
+                script:"أنا الوحيد تقريبًا الذي يعرف غرفة التحكم جيدًا. دخلتها في وقت سابق لإصلاح مشكلة، لكنني لم أوقف الكاميرات عمدًا."
+            },
+            {
+                name:"النزيل الآخر",
+                secret:"رأيت شخصًا يستخدم درج الطوارئ.",
+                script:"كنت في الطابق الثالث وسمعت صوت خطوات في درج الطوارئ. لم أر الوجه، لكن الشخص كان يحمل شيئًا يشبه الهاتف."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 12 — الشريط المفقود",
+    difficulty:"hard",
+
+    story:"صحفي كان يحتفظ بتسجيل صوتي مهم داخل مكتبه. بعد اختفائه، وجد المحققون أن جهاز التسجيل ما زال في مكانه لكن الشريط الموجود داخله ليس الشريط الأصلي. ثلاثة أشخاص كانوا يعرفون قيمة التسجيل.",
+
+    evidence:[
+        "الشريط الموجود يحمل تاريخًا قديمًا.",
+        "جهاز التسجيل لم يتم تحريكه.",
+        "الصحفي كتب اسمًا على ورقة ثم مزقها.",
+        "باب المكتب لم يُكسر.",
+        "شخص واحد كان يعرف مكان النسخة الاحتياطية."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"اكتشف من يستطيع استبدال الشريط ومن يعرف النسخة الاحتياطية.",
+            secret:"الشريط الحالي ليس التسجيل الذي كان الصحفي يخفيه.",
+            script:"اسأل كل شخص عن علاقته بالتسجيل، ومن كان يعرف مكان النسخة الاحتياطية، ومن دخل المكتب قبل اختفاء الصحفي."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت استبدلت الشريط الأصلي.",
+            secret:"أنت تعرف محتوى التسجيل الحقيقي.",
+            script:"قل إن الشريط القديم قد يكون موجودًا منذ فترة، وحاول توجيه الشك إلى الشخص الذي يعرف النسخة الاحتياطية."
+        },
+
+        suspects:[
+            {
+                name:"المحرر",
+                secret:"سمعت جزءًا من التسجيل قبل اختفائه.",
+                script:"كنت أعمل مع الصحفي وسمعت جزءًا من التسجيل. عرفت أنه خطير، لكنني لم آخذ الشريط."
+            },
+            {
+                name:"المصدر",
+                secret:"كنت الشخص الموجود في التسجيل.",
+                script:"التسجيل كان يتحدث عن معلومات تخصني، ولذلك كنت خائفًا من نشره. تحدثت مع الصحفي، لكنني غادرت قبل أن يحدث أي شيء."
+            },
+            {
+                name:"المساعد",
+                secret:"أنت تعرف مكان النسخة الاحتياطية.",
+                script:"كنت أساعد الصحفي في أرشفة الملفات ولذلك أعرف مكان النسخ الاحتياطية. لم ألمس التسجيل الأصلي."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 13 — قطار 11:20",
+    difficulty:"hard",
+
+    story:"في قطار ليلي، اكتشف الركاب أن حقيبة تحتوي على مستندات مهمة اختفت أثناء توقف القطار في محطة صغيرة. لم ينزل سوى ثلاثة أشخاص، لكن الحقيبة لم تظهر في أي كاميرا عند الأبواب.",
+
+    evidence:[
+        "الحقيبة كانت تحت المقعد.",
+        "التوقف استمر ست دقائق.",
+        "باب عربة الأمتعة فُتح.",
+        "أحد الركاب كان لديه تذكرة لعربة أخرى.",
+        "الحقيبة ظهرت لاحقًا داخل القطار."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"حدد كيف تحركت الحقيبة داخل القطار دون ظهورها على الكاميرات.",
+            secret:"الحقيبة ظهرت لاحقًا في مكان لا يطابق طريق الخروج الطبيعي.",
+            script:"اسأل عن عربة الأمتعة والتذكرة المختلفة، وراجع من كان يستطيع الانتقال بين العربات."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت نقلت الحقيبة داخل القطار.",
+            secret:"أنت استغليت التوقف لإخفاء الحقيبة في مكان آخر.",
+            script:"حاول جعل الشك يقع على عامل القطار، لأن لديه صلاحية فتح عربة الأمتعة."
+        },
+
+        suspects:[
+            {
+                name:"رجل الأعمال",
+                secret:"المستندات تخص صفقة كنت تريدها.",
+                script:"كنت مهتمًا جدًا بالمستندات لأنها مرتبطة بصفقة منافسة، لكنني لم أسرق الحقيبة. أثناء التوقف بقيت في مقعدي."
+            },
+            {
+                name:"الموظف",
+                secret:"تذكرتك كانت لعربة مختلفة.",
+                script:"تذكرتي بالفعل كانت لعربة أخرى، ولذلك تحركت داخل القطار. هذا قد يجعلني أبدو مشبوهًا، لكنني لم آخذ الحقيبة."
+            },
+            {
+                name:"عامل القطار",
+                secret:"فتحت عربة الأمتعة.",
+                script:"فتحت عربة الأمتعة أثناء التوقف لأن هناك حقيبة يجب نقلها. لم أكن أعرف أن هناك مستندات مهمة مفقودة."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 14 — المرآة المكسورة",
+    difficulty:"hard",
+
+    story:"وجد صاحب معرض تحف غرفة مكتبه في حالة فوضى، وكانت مرآة كبيرة مكسورة. قال الجميع إنهم سمعوا صوت تحطم المرآة، لكن أحدًا لم ير ما حدث. خلف المرآة وُجد تجويف صغير كان يحتوي على وثيقة مهمة.",
+
+    evidence:[
+        "المرآة لم تكن معلقة جيدًا.",
+        "الوثيقة اختفت من التجويف.",
+        "زجاج المرآة سقط إلى الداخل.",
+        "الغبار على الحائط كان متحركًا.",
+        "أحد الأشخاص يعرف بوجود التجويف."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"حدد هل تحطمت المرآة قبل أم بعد اختفاء الوثيقة.",
+            secret:"اتجاه سقوط الزجاج مهم جدًا.",
+            script:"اسأل من يعرف التجويف، ومن كان لديه سبب للوصول إليه، ولا تعتمد فقط على قصة اصطدام المرآة."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت تعرف أن الوثيقة كانت خلف المرآة.",
+            secret:"كنت تعرف مكان التجويف قبل الحادث.",
+            script:"حاول جعل سقوط المرآة يبدو حادثًا عشوائيًا، وركز على عامل النقل الذي كان قريبًا منها."
+        },
+
+        suspects:[
+            {
+                name:"مالك المعرض",
+                secret:"أنت تعرف مكان التجويف.",
+                script:"كنت أعرف أن هناك تجويفًا خلف المرآة لأنني اكتشفته منذ سنوات. لم أخبر أحدًا عنه، لكنني لم آخذ الوثيقة."
+            },
+            {
+                name:"الخبير",
+                secret:"كنت تبحث عن الوثيقة.",
+                script:"كنت أعرف أن هناك مستندًا مهمًا في المكتب وكنت أريد رؤيته. دخلت الغرفة قبل الحادث، لكن المرآة كانت سليمة وقتها."
+            },
+            {
+                name:"عامل النقل",
+                secret:"أنت اصطدمت بالمرآة.",
+                script:"كنت أنقل صندوقًا بالقرب من المكتب، وربما اصطدمت بالمرآة دون قصد. سمعت صوتًا ثم ابتعدت، لكنني لم آخذ شيئًا."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 15 — الساعة 3:33",
+    difficulty:"hard",
+
+    story:"كل الساعات الإلكترونية داخل منزل عائلة توقفت عند 3:33 صباحًا، بينما استمر التيار الكهربائي بشكل طبيعي. في نفس الوقت اختفى أحد أفراد العائلة، وبعدها وُجدت رسالة مشفرة على جهاز الكمبيوتر.",
+
+    evidence:[
+        "الساعات توقفت في نفس الثانية.",
+        "الكمبيوتر لم يتوقف.",
+        "الرسالة تستخدم رمزًا يعرفه فرد واحد من العائلة.",
+        "باب المنزل كان مقفلًا.",
+        "سيارة العائلة اختفت من الجراج."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"حل لغز الساعات والرسالة والسيارة.",
+            secret:"توقف الساعات لم يكن بسبب انقطاع الكهرباء.",
+            script:"اسأل من يعرف رمز الرسالة، ومن يملك مفتاح السيارة، ومن سمع أو رأى السيارة وقت اختفاء الشخص."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت خططت لاختفاء الشخص.",
+            secret:"أنت تعرف معنى الرسالة المشفرة.",
+            script:"حاول جعل الرسالة تبدو قديمة، وركز على الشخص الذي يملك مفتاح السيارة."
+        },
+
+        suspects:[
+            {
+                name:"الأخ",
+                secret:"تعرف الرمز المستخدم في الرسالة.",
+                script:"أنا أعرف الرمز لأننا استخدمناه في الماضي بين أفراد العائلة. الرسالة جعلتني أشك أن الشخص المختفي كان يخطط لشيء."
+            },
+            {
+                name:"العم",
+                secret:"كنت تملك مفتاح السيارة.",
+                script:"كنت أملك مفتاح السيارة الاحتياطي، وهذا صحيح. لكنني لم أستخدمه تلك الليلة، والسيارة كانت موجودة عندما ذهبت للنوم."
+            },
+            {
+                name:"الجارة",
+                secret:"سمعت سيارة تغادر.",
+                script:"كنت مستيقظة حوالي 3:30 وسمعت سيارة تتحرك من أمام المنزل. لم أستطع رؤية من يقودها."
+            }
+        ]
+    }
+}
+
+];
+
+/* =========================================================
+   PART 2 — CASES 16-20 + GAME STATE
+========================================================= */
+
+/*
+   IMPORTANT:
+   Part 1 already opened the main <script> tag.
+   We continue inside the same script.
+*/
+
+
+/* =========================
+   VERY HARD CASES
+========================= */
+
+CASES.push(
+
+{
+    title:"القضية 16 — الجريمة التي لم تحدث",
+    difficulty:"very hard",
+
+    story:"وصل بلاغ إلى الشرطة عن جريمة داخل مكتب مغلق. عند الوصول وجدوا آثار فوضى، زجاجًا مكسورًا، وكمبيوتر محطمًا. لكن لا توجد ضحية. بعد فحص المكان، اكتشف المحقق أن شخصًا ما صنع مسرح الجريمة ليبدو وكأن جريمة وقعت.",
+
+    evidence:[
+        "الزجاج المكسور كان داخل الغرفة وليس خارجها.",
+        "الكمبيوتر محطم لكن القرص الصلب سليم.",
+        "لا توجد آثار خروج بالقوة.",
+        "البلاغ وصل قبل اكتشاف الفوضى.",
+        "أحد الأشخاص كان يعرف نظام المكتب بالتفصيل."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"اكتشف هل وقعت جريمة أصلًا، ومن المستفيد من خلق مسرح جريمة مزيف.",
+            secret:"هناك شيء في مسرح الجريمة لا يتوافق مع قصة الاقتحام.",
+            script:"لا تبدأ بافتراض أن الضحية موجود أو أن هناك اقتحامًا حقيقيًا. افحص اتجاه الزجاج، الكمبيوتر، توقيت البلاغ، ومن كان يعرف تفاصيل المكتب."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت صنعت مسرح الجريمة المزيف لتحقيق هدف آخر.",
+            secret:"أنت تعرف أن الشخص الذي يفترض أنه ضحية لم يكن موجودًا أصلًا.",
+            script:"حاول إقناع الآخرين أن الفوضى دليل على وقوع جريمة، وركز على الكمبيوتر والزجاج حتى لا ينتبه أحد إلى أن البلاغ نفسه كان غريب التوقيت."
+        },
+
+        suspects:[
+            {
+                name:"المدير",
+                secret:"أنت كنت تعرف أن هناك ملفًا سريًا على الكمبيوتر.",
+                script:"كنت أعرف أن الكمبيوتر يحتوي على ملف مهم، ولذلك كنت مهتمًا بما يحدث في المكتب. لكنني لم أصنع مسرح الجريمة."
+            },
+            {
+                name:"الموظف التقني",
+                secret:"أنت تعرف أن القرص الصلب يمكن إخراجه.",
+                script:"بحكم عملي أعرف أجهزة الكمبيوتر جيدًا، وأعرف أن تدمير الجهاز لا يعني تدمير الملفات. دخلت المكتب في وقت سابق للصيانة."
+            },
+            {
+                name:"الحارس",
+                secret:"وصل إليك البلاغ قبل الجميع.",
+                script:"وصلني اتصال عن مشكلة في المكتب، ولذلك ذهبت إلى هناك. عندما وصلت وجدت الفوضى بالفعل ولم أكن أعرف من صنعها."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 17 — الشخص الرابع",
+    difficulty:"very hard",
+
+    story:"أربعة أشخاص قالوا إنهم كانوا في غرفة واحدة طوال الليل. تسجيل صوتي من الغرفة يؤكد وجود أربعة أصوات فعلًا. لكن المحقق اكتشف أن أحد الأصوات مسجل مسبقًا. السؤال الحقيقي ليس فقط من فعلها، بل من لم يكن موجودًا أصلًا.",
+
+    evidence:[
+        "التسجيل يحتوي على صوت متكرر.",
+        "الساعة في التسجيل لا تطابق الوقت الحقيقي.",
+        "ثلاثة أشخاص لديهم أعذار قابلة للتحقق.",
+        "الشخص الرابع لا يملك دليلًا على وجوده.",
+        "الهاتف الذي سجل الصوت كان في الغرفة."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"حدد عدد الأشخاص الموجودين فعلًا في الغرفة.",
+            secret:"أحد الأصوات في التسجيل لا ينتمي إلى وقت الحادث.",
+            script:"استمع إلى الروايات وقارنها بالتسجيل. لا تعتمد على عدد الأصوات فقط؛ ابحث عن الصوت المتكرر وتوقيت التسجيل."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت استخدمت تسجيلًا قديمًا لتخلق انطباعًا بوجود شخص آخر.",
+            secret:"أحد الأصوات التي يسمعها الجميع تم تسجيلها قبل الحادث.",
+            script:"حاول التشكيك في جودة التسجيل وتوقيته، وقل إن أي شخص كان يستطيع تشغيل تسجيل قديم من الهاتف."
+        },
+
+        suspects:[
+            {
+                name:"صاحب المنزل",
+                secret:"أنت سجلت جزءًا من الحديث سابقًا.",
+                script:"كنت موجودًا في المنزل بالفعل، لكنني سجلت حديثًا سابقًا لأنني كنت أريد الاحتفاظ به. لم أتوقع أن يستخدم التسجيل كدليل."
+            },
+            {
+                name:"الصديق",
+                secret:"غادرت الغرفة لفترة.",
+                script:"أنا كنت في المنزل، لكنني خرجت من الغرفة لبعض الوقت. لو عرف المحقق ذلك فقد يظن أنني فعلت شيئًا أثناء غيابي."
+            },
+            {
+                name:"الضيف",
+                secret:"لم تكن في الغرفة طوال الوقت.",
+                script:"قلت إنني كنت في الغرفة طوال الليل، لكن الحقيقة أنني خرجت لفترة قصيرة. لم أفعل شيئًا، لكنني أخفيت ذلك خوفًا من الاتهام."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 18 — الملف الذي تغيّر وحده",
+    difficulty:"very hard",
+
+    story:"في شركة كبيرة، تم تعديل ملف مالي حساس في الساعة 4:02 صباحًا. النظام يقول إن التعديل تم من حساب المدير، لكن المدير كان خارج البلاد. أربعة موظفين يملكون طرقًا مختلفة للوصول إلى النظام.",
+
+    evidence:[
+        "حساب المدير استخدم كلمة المرور الصحيحة.",
+        "الجهاز الخاص بالمدير كان مغلقًا.",
+        "التعديل تم من جهاز داخل الشركة.",
+        "هناك جهاز آخر متصل بالشبكة.",
+        "سجل النظام يحتوي على دقيقة مفقودة."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"حدد كيف تم استخدام حساب المدير ومن الجهاز الذي تم منه التعديل.",
+            secret:"توقيت التعديل لا يتطابق مع وجود المدير.",
+            script:"اسأل من يعرف كلمة مرور المدير، ومن يستطيع الوصول إلى أجهزة الشركة، ثم ركز على الدقيقة المفقودة في سجل النظام."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت استخدمت حساب المدير للوصول إلى الملف.",
+            secret:"أنت لم تستخدم جهاز المدير نفسه.",
+            script:"حاول إقناع الجميع أن كلمة المرور يمكن أن تكون معروفة لأكثر من شخص، وأن سجل النظام لا يثبت هويتك."
+        },
+
+        suspects:[
+            {
+                name:"مسؤول الشبكة",
+                secret:"يمكنك الوصول إلى أجهزة الموظفين.",
+                script:"أنا مسؤول الشبكة ويمكنني الوصول إلى أجهزة الشركة لأسباب تقنية. أعرف كيف تعمل الأنظمة، لكنني لم أعدل الملف."
+            },
+            {
+                name:"المحاسب",
+                secret:"كنت ستستفيد من تغيير الأرقام.",
+                script:"الملف المالي كان يؤثر على أموالي ومكافآتي، لذلك كنت مهتمًا به. لكنني لم أستخدم حساب المدير."
+            },
+            {
+                name:"المساعد",
+                secret:"كنت تعرف كلمة مرور المدير.",
+                script:"كنت أساعد المدير في السفر والاجتماعات ولذلك أعرف بعض كلمات المرور الخاصة به. لم أستخدم حسابه تلك الليلة."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 19 — الفندق الذي نام فيه الجميع",
+    difficulty:"very hard",
+
+    story:"في فندق صغير، قال جميع النزلاء إنهم كانوا نائمين عندما حدثت السرقة. لا توجد كاميرات في الممرات، لكن النظام الإلكتروني للأبواب يسجل كل حركة. الغريب أن سجل الأبواب يثبت أن شخصًا دخل الغرفة، بينما لا يوجد أي خروج مسجل.",
+
+    evidence:[
+        "الدخول تم الساعة 4:18.",
+        "لا يوجد خروج مسجل من الباب.",
+        "نافذة الغرفة مفتوحة.",
+        "الغرفة في الطابق الثاني.",
+        "المصعد لم يتحرك."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"فسر كيف دخل شخص ولم يظهر خروجه في سجل الباب.",
+            secret:"النافذة قد تكون أهم من سجل الباب.",
+            script:"اسأل عن تصميم الفندق، النافذة، السلالم، ومفاتيح الطوارئ. لا تفترض أن الدخول والخروج تمّا من نفس المكان."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت تعرف طريقة الدخول والخروج غير المسجلة.",
+            secret:"أنت استغليت النافذة بدل الباب في نهاية العملية.",
+            script:"حاول جعل الجميع يركزون على سجل الباب فقط، وقل إن النافذة ربما فُتحت بسبب الهواء."
+        },
+
+        suspects:[
+            {
+                name:"النزيل المجاور",
+                secret:"سمعت النافذة تُفتح.",
+                script:"كنت في الغرفة المجاورة وسمعت صوت النافذة. لم أخرج لأتحقق لأنني ظننت أن شخصًا من الفندق يقوم بعمل ما."
+            },
+            {
+                name:"موظف الفندق",
+                secret:"لديك مفتاح الطوارئ.",
+                script:"معي مفتاح طوارئ يمكنه فتح بعض الغرف، لكنني لم أستخدمه تلك الليلة. كنت في مكتب الاستقبال معظم الوقت."
+            },
+            {
+                name:"النزيل الغامض",
+                secret:"كنت تعرف تصميم الفندق.",
+                script:"هذه ليست أول مرة أقيم فيها هنا، ولذلك أعرف السلالم والممرات جيدًا. كنت في غرفتي عندما حدثت السرقة."
+            }
+        ]
+    }
+},
+
+{
+    title:"القضية 20 — اللغز الأخير",
+    difficulty:"very hard",
+
+    story:"اجتمع خمسة أشخاص في منزل قديم لاستلام وصية رجل ثري توفي قبل أيام. قبل قراءة الوصية، انطفأت الأنوار. بعد عودتها اختفى ظرف الوصية، ووجد الجميع على الطاولة ورقة مكتوبًا عليها: «واحد منكم لم يكن هنا من البداية». كل شخص يملك سببًا للكذب، لكن الأدلة تشير إلى أن الخطة بدأت قبل وصول الجميع.",
+
+    evidence:[
+        "الظرف كان على الطاولة قبل انطفاء الأنوار.",
+        "الورقة كُتبت قبل انطفاء الأنوار.",
+        "أحد الكراسي لم يُستخدم.",
+        "الهاتف الخاص بالمتوفى أرسل رسالة قبل الاجتماع.",
+        "هناك مفتاح مخفي داخل ساعة قديمة.",
+        "شخص واحد كان يعرف مكان الساعة.",
+        "الوصية الحقيقية ليست داخل الظرف الذي اختفى."
+    ],
+
+    roles:{
+        detective:{
+            name:"المحقق",
+            description:"اكتشف من كان يعرف أسرار المنزل ومن بدأ الخطة قبل انطفاء الأنوار.",
+            secret:"اختفاء الظرف ليس هو اللغز الحقيقي؛ الوصية الأصلية موجودة في مكان آخر.",
+            script:"اسأل عن الورقة، الكرسي غير المستخدم، الهاتف، والساعة القديمة. حاول معرفة من كان يعرف المنزل قبل الاجتماع."
+        },
+
+        accused:{
+            name:"المتهم",
+            description:"أنت خططت لاختفاء الظرف لإخفاء مسار البحث عن الوصية الحقيقية.",
+            secret:"أنت تعرف أن الوصية الأصلية ليست داخل الظرف.",
+            script:"حاول جعل الجميع يركزون على الشخص الذي يملك مفتاحًا أو يعرف مكان الساعة، بينما تخفي معرفتك بالحقيقة."
+        },
+
+        suspects:[
+            {
+                name:"ابن المتوفى",
+                secret:"كنت تعرف أن الوصية الحقيقية ليست في الظرف.",
+                script:"والدي أخبرني قبل وفاته أن هناك نسخة حقيقية من الوصية مخبأة في مكان آخر. لم أخبر أحدًا لأنني كنت أخشى أن يحاول أحد الوصول إليها."
+            },
+            {
+                name:"المحامي",
+                secret:"أنت كتبت جزءًا من الوصية.",
+                script:"كنت المحامي المسؤول عن صياغة الوصية، ولذلك أعرف تفاصيلها. كنت أعرف أن الظرف الموجود على الطاولة ليس كل شيء، لكنني لم أسرقه."
+            },
+            {
+                name:"الشريك التجاري",
+                secret:"ستخسر ثروة إذا ظهرت الوصية الحقيقية.",
+                script:"الوصية الحقيقية كانت ستؤثر على حصتي في الشركة، ولذلك كان لدي سبب للخوف منها. لكنني لم ألمس الظرف."
+            },
+            {
+                name:"الخادم القديم",
+                secret:"أنت تعرف مكان الساعة والمفتاح.",
+                script:"أعمل في هذا المنزل منذ سنوات وأعرف أماكن كثيرة لا يعرفها الآخرون، ومنها الساعة القديمة. لكنني لم آخذ المفتاح ولم ألمس الوصية."
+            }
+        ]
+    }
+}
+
+);
+
+
+/* =========================================================
+   GAME STATE
+========================================================= */
+
+let peer = null;
+
+let myId = null;
+let myName = "";
+
+let isHost = false;
+
+let gameCode = "";
+let hostPeerId = "";
+
+let currentCase = null;
+let selectedCaseIndex = 0;
+
+let roundNumber = 0;
+
+let gameStarted = false;
+let roundFinished = false;
+
+let gameEndTime = 0;
+let timerInterval = null;
+
+let detectiveId = null;
+let accusedId = null;
+
+let myRole = null;
+
+let players = {};
+let connections = {};
+
+let votes = {};
+let scores = {};
+
+let hostConnection = null;
+
+let connectionTimeout = null;
+
+let pendingJoin = false;
+
+
+/* =========================================================
+   ROLE HELPERS
+========================================================= */
+
+function getRoleData(role, caseData, suspectIndex){
+
+    if(!caseData || !caseData.roles){
+        return {
+            name:"غير محدد",
+            description:"",
+            secret:"",
+            script:""
+        };
+    }
+
+    if(role === "detective"){
+        return {
+            name:caseData.roles.detective?.name || "المحقق",
+            description:caseData.roles.detective?.description || "",
+            secret:caseData.roles.detective?.secret || "",
+            script:caseData.roles.detective?.script || ""
+        };
+    }
+
+    if(role === "accused"){
+        return {
+            name:caseData.roles.accused?.name || "المتهم",
+            description:caseData.roles.accused?.description || "",
+            secret:caseData.roles.accused?.secret || "",
+            script:caseData.roles.accused?.script || ""
+        };
+    }
+
+    const suspects =
+        caseData.roles.suspects || [];
+
+    if(!suspects.length){
+        return {
+            name:"المشتبه به",
+            description:"",
+            secret:"",
+            script:""
+        };
+    }
+
+    const data =
+        suspects[suspectIndex % suspects.length];
+
+    return {
+        name:data.name || "المشتبه به",
+        description:"أنت أحد المشتبه بهم في القضية. استمع لباقي اللاعبين وحاول الدفاع عن نفسك.",
+        secret:data.secret || "",
+        script:data.script || ""
+    };
+}
+
+
+/* =========================================================
+   CASE SELECTS
+========================================================= */
+
+function populateCaseSelects(){
+
+    const selects = [
+        $("lobbyCaseSelect"),
+        $("lobbyCaseSelect2")
+    ];
+
+    selects.forEach(select=>{
+
+        if(!select) return;
+
+        select.innerHTML = "";
+
+        CASES.forEach((caseData,index)=>{
+
+            const option =
+                document.createElement("option");
+
+            option.value = String(index);
+
+            option.textContent =
+                `${index + 1}. ${caseData.title} — ${difficultyArabic(caseData.difficulty)}`;
+
+            select.appendChild(option);
+        });
+
+        select.value =
+            String(selectedCaseIndex);
+    });
+}
+
+
+function difficultyArabic(level){
+
+    const map = {
+        easy:"سهل",
+        medium:"متوسط",
+        hard:"صعب",
+        "very hard":"صعب جدًا"
+    };
+
+    return map[level] || level || "";
+}
+
+
+function updateCasePreview(){
+
+    const select =
+        $("lobbyCaseSelect2") ||
+        $("lobbyCaseSelect");
+
+    if(!select) return;
+
+    const index =
+        Number(select.value);
+
+    const caseData =
+        CASES[index];
+
+    if(!caseData) return;
+
+    const preview =
+        $("lobbyCasePreview");
+
+    if(!preview) return;
+
+    preview.innerHTML = `
+        <div class="case-info-title">
+            ${escapeHtml(caseData.title)}
+        </div>
+
+        <div class="small muted" style="margin-bottom:8px;">
+            الصعوبة: ${escapeHtml(difficultyArabic(caseData.difficulty))}
+        </div>
+
+        <div class="muted" style="line-height:1.8;">
+            ${escapeHtml(caseData.story)}
+        </div>
+    `;
+}
+
+
+/* =========================================================
+   CONNECTION STATUS
+========================================================= */
+
+function clearConnectionTimeout(){
+
+    if(connectionTimeout){
+        clearTimeout(connectionTimeout);
+        connectionTimeout = null;
+    }
+}
+
+
+function connectionFailed(message){
+
+    clearConnectionTimeout();
+
+    if(peer){
+
+        try{
+            peer.destroy();
+        }catch(e){}
+
+    }
+
+    peer = null;
+
+    if(isHost){
+        setStatus(
+            "createStatus",
+            message || "فشل إنشاء الغرفة.",
+            "error"
+        );
+    }else{
+        setStatus(
+            "joinStatus",
+            message || "فشل الاتصال باللعبة.",
+            "error"
+        );
+    }
+}
+
+
+/* =========================================================
+   PEER CREATION
+========================================================= */
+
+function createPeer(peerId, timeoutMs = 12000){
+
+    return new Promise((resolve,reject)=>{
+
+        let settled = false;
+
+        const options = {
+            debug:0,
+
+            config:{
+                iceServers:[
+                    {
+                        urls:"stun:stun.l.google.com:19302"
+                    },
+                    {
+                        urls:"stun:global.stun.twilio.com:3478"
+                    }
+                ]
+            }
+        };
+
+        let p;
+
+        try{
+
+            if(peerId){
+                p = new Peer(peerId,options);
+            }else{
+                p = new Peer(options);
+            }
+
+        }catch(error){
+
+            reject(error);
+            return;
+
+        }
+
+
+        const timeout =
+            setTimeout(()=>{
+
+                if(settled) return;
+
+                settled = true;
+
+                try{
+                    p.destroy();
+                }catch(e){}
+
+                reject(
+                    new Error("PeerJS initialization timeout")
+                );
+
+            },timeoutMs);
+
+
+        p.on("open",id=>{
+
+            if(settled) return;
+
+            settled = true;
+
+            clearTimeout(timeout);
+
+            resolve({
+                peer:p,
+                id:id
+            });
+
+        });
+
+
+        p.on("error",error=>{
+
+            if(settled){
+
+                console.error(
+                    "PeerJS error:",
+                    error
+                );
+
+                return;
+            }
+
+            settled = true;
+
+            clearTimeout(timeout);
+
+            try{
+                p.destroy();
+            }catch(e){}
+
+            reject(error);
+
+        });
+
+    });
+}
+
+
+/* =========================================================
+   CONNECTION SETUP
+========================================================= */
+
+function setupConnection(conn){
+
+    if(!conn) return;
+
+    conn.on("open",()=>{
+
+        console.log(
+            "Connection opened:",
+            conn.peer
+        );
+
+        if(!isHost){
+
+            hostConnection = conn;
+
+            clearConnectionTimeout();
+
+        }
+
+        if(isHost){
+
+            connections[conn.peer] = conn;
+
+            refreshLobby();
+
+        }
+
+    });
+
+
+    conn.on("data",data=>{
+
+        handleData(data,conn);
+
+    });
+
+
+    conn.on("close",()=>{
+
+        console.log(
+            "Connection closed:",
+            conn.peer
+        );
+
+        if(isHost){
+
+            const playerId = conn.peer;
+
+            if(players[playerId]){
+
+                delete players[playerId];
+
+                delete connections[playerId];
+
+                refreshLobby();
+
+                broadcastLobby();
+
+            }
+
+        }else{
+
+            setStatus(
+                "gameStatus",
+                "الاتصال بالـHost انقطع.",
+                "error"
+            );
+
+        }
+
+    });
+
+
+    conn.on("error",error=>{
+
+        console.error(
+            "Connection error:",
+            error
+        );
+
+    });
+
+
+    if(isHost){
+
+        connections[conn.peer] = conn;
+
+    }
+
+}
+
+
+/* =========================================================
+   DATA ROUTER
+========================================================= */
+
+function handleData(data,conn){
+
+    if(!data || !data.type){
+        return;
+    }
+
+    if(isHost){
+
+        handleHostData(data,conn);
+
+    }else{
+
+        handleClientData(data);
+
+    }
+
+}
+
+
+/* =========================================================
+   SEND HELPERS
+========================================================= */
+
+function sendToHost(data){
+
+    if(!hostConnection){
+
+        console.warn(
+            "No host connection."
+        );
+
+        return false;
+    }
+
+    if(!hostConnection.open){
+
+        console.warn(
+            "Host connection is not open."
+        );
+
+        return false;
+    }
+
+    try{
+
+        hostConnection.send(data);
+
+        return true;
+
+    }catch(error){
+
+        console.error(
+            "sendToHost error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+function sendToPlayer(playerId,data){
+
+    const conn =
+        connections[playerId];
+
+    if(!conn || !conn.open){
+        return false;
+    }
+
+    try{
+
+        conn.send(data);
+
+        return true;
+
+    }catch(error){
+
+        console.error(
+            "sendToPlayer error:",
+            error
+        );
+
+        return false;
+
+    }
+
+}
+
+
+function broadcast(data,exceptId=null){
+
+    Object.keys(connections)
+        .forEach(playerId=>{
+
+            if(playerId === exceptId){
+                return;
+            }
+
+            sendToPlayer(
+                playerId,
+                data
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   HOST DATA HANDLER
+========================================================= */
+
+function handleHostData(data,conn){
+
+    if(!data || !data.type){
+        return;
+    }
+
+
+    if(data.type === "JOIN"){
+
+        if(!data.player || !data.player.id){
+            return;
+        }
+
+        const playerId =
+            String(data.player.id);
+
+        const playerName =
+            safeName(
+                data.player.name || "Player"
+            );
+
+        players[playerId] = {
+
+            id:playerId,
+
+            name:playerName,
+
+            role:null,
+
+            clue:""
+
+        };
+
+
+        if(typeof scores[playerId] !== "number"){
+            scores[playerId] = 0;
+        }
+
+
+        if(conn){
+
+            connections[playerId] =
+                conn;
+
+        }
+
+
+        sendToPlayer(
+            playerId,
+            {
+                type:"LOBBY_STATE",
+
+                gameCode:gameCode,
+
+                players:JSON.parse(
+                    JSON.stringify(players)
+                ),
+
+                scores:{
+                    ...scores
+                },
+
+                selectedCaseIndex:
+                    selectedCaseIndex,
+
+                round:
+                    roundNumber
+
+            }
+        );
+
+
+        broadcastLobby();
+
+        refreshLobby();
+
+        return;
+
+    }
+
+
+    if(data.type === "VOTE"){
+
+        if(!data.playerId || !data.targetId){
+            return;
+        }
+
+        recordVote(
+            String(data.playerId),
+            String(data.targetId)
+        );
+
+        return;
+
+    }
+
+
+    if(data.type === "PING"){
+
+        sendToPlayer(
+            conn?.peer,
+            {
+                type:"PONG"
+            }
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLIENT DATA HANDLER
+========================================================= */
+
+function handleClientData(data){
+
+    if(!data || !data.type){
+        return;
+    }
+
+
+    if(data.type === "LOBBY_STATE"){
+
+        receiveLobbyState(data);
+
+        return;
+
+    }
+
+
+    if(data.type === "GAME_START"){
+
+        receiveGameStart(data);
+
+        return;
+
+    }
+
+
+    if(data.type === "VOTE_UPDATE"){
+
+        receiveVoteUpdate(data);
+
+        return;
+
+    }
+
+
+    if(data.type === "RESULT"){
+
+        receiveResult(data);
+
+        return;
+
+    }
+
+
+    if(data.type === "RETURN_LOBBY"){
+
+        receiveReturnLobby(data);
+
+        return;
+
+    }
+
+
+    if(data.type === "PONG"){
+
+        return;
+
+    }
+
+}
+
+
+/* =========================================================
+   LOBBY BROADCAST
+========================================================= */
+
+function broadcastLobby(){
+
+    if(!isHost){
+        return;
+    }
+
+    const payload = {
+
+        type:"LOBBY_STATE",
+
+        gameCode:gameCode,
+
+        players:JSON.parse(
+            JSON.stringify(players)
+        ),
+
+        scores:{
+            ...scores
+        },
+
+        selectedCaseIndex:
+            selectedCaseIndex,
+
+        round:
+            roundNumber
+
+    };
+
+    broadcast(payload);
+
+}
+
+
+/* =========================================================
+   LOBBY REFRESH
+========================================================= */
+
+function refreshLobby(){
+
+    const list =
+        $("lobbyPlayers");
+
+    if(!list) return;
+
+    list.innerHTML = "";
+
+    const ids =
+        Object.keys(players);
+
+
+    if(!ids.length){
+
+        list.innerHTML =
+            `<div class="empty">مفيش لاعبين لسه.</div>`;
+
+    }
+
+
+    ids.forEach(id=>{
+
+        const player =
+            players[id];
+
+        const item =
+            document.createElement("div");
+
+        item.className =
+            "player-item";
+
+        const isOnline =
+            id === myId ||
+            (
+                connections[id] &&
+                connections[id].open
+            );
+
+        item.innerHTML = `
+
+            <div>
+                <span class="connection-dot ${isOnline ? "online" : ""}"></span>
+
+                <span class="player-name">
+                    ${escapeHtml(player.name)}
+                </span>
+            </div>
+
+            <div class="player-host">
+                ${
+                    id === myId && isHost
+                    ? "HOST"
+                    : ""
+                }
+            </div>
+        `;
+
+        list.appendChild(item);
+
+    });
+
+
+    const count =
+        $("playerCount");
+
+    if(count){
+
+        count.textContent =
+            `${ids.length} لاعب`;
+
+    }
+
+
+    const gameCount =
+        $("gamePlayerCount");
+
+    if(gameCount){
+
+        gameCount.textContent =
+            `${ids.length}`;
+
+    }
+
+
+    const waiting =
+        $("lobbyWaitingText");
+
+    const controls =
+        $("lobbyHostControls");
+
+    if(isHost){
+
+        if(controls){
+            controls.classList.remove("hidden");
+        }
+
+        if(waiting){
+            waiting.classList.add("hidden");
+        }
+
+    }else{
+
+        if(controls){
+            controls.classList.add("hidden");
+        }
+
+        if(waiting){
+            waiting.classList.remove("hidden");
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   LOBBY STATE RECEIVER
+========================================================= */
+
+function receiveLobbyState(data){
+
+    if(data.gameCode){
+        gameCode =
+            data.gameCode;
+    }
+
+    if(data.players){
+
+        players =
+            data.players;
+
+    }
+
+    if(data.scores){
+
+        scores =
+            data.scores;
+
+    }
+
+    if(typeof data.selectedCaseIndex === "number"){
+
+        selectedCaseIndex =
+            data.selectedCaseIndex;
+
+    }
+
+    if(typeof data.round === "number"){
+
+        roundNumber =
+            data.round;
+
+    }
+
+
+    const code =
+        $("lobbyGameCode");
+
+    if(code){
+
+        code.textContent =
+            gameCode || "------";
+
+    }
+
+
+    const select =
+        $("lobbyCaseSelect2");
+
+    if(select){
+
+        select.value =
+            String(selectedCaseIndex);
+
+    }
+
+
+    updateCasePreview();
+
+    refreshLobby();
+
+}
+
+
+/* =========================================================
+   GAME START
+========================================================= */
+
+function startGame(){
+
+    if(!isHost){
+        return;
+    }
+
+
+    const playerIds =
+        Object.keys(players);
+
+
+    if(playerIds.length < 3){
+
+        setStatus(
+            "lobbyStatus",
+            "لازم يكون فيه 3 لاعبين على الأقل عشان تبدأ.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    const selected =
+        $("lobbyCaseSelect2");
+
+    if(selected){
+
+        selectedCaseIndex =
+            Number(selected.value);
+
+    }
+
+
+    currentCase =
+        CASES[selectedCaseIndex];
+
+
+    if(!currentCase){
+
+        setStatus(
+            "lobbyStatus",
+            "اختار قضية الأول.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    roundNumber++;
+
+    gameStarted = true;
+
+    roundFinished = false;
+
+    votes = {};
+
+    detectiveId = null;
+
+    accusedId = null;
+
+
+    playerIds.forEach(id=>{
+
+        if(typeof scores[id] !== "number"){
+            scores[id] = 0;
+        }
+
+        players[id].role = null;
+
+        players[id].clue = "";
+
+    });
+
+
+    const shuffled =
+        shuffle(playerIds);
+
+
+    detectiveId =
+        shuffled[0];
+
+    accusedId =
+        shuffled[1];
+
+
+    const suspectIds =
+        shuffled.slice(2);
+
+
+    suspectIds.forEach(
+        (id,index)=>{
+
+            players[id].role =
+                "suspect";
+
+            const suspectList =
+                currentCase.roles.suspects || [];
+
+            players[id].clue =
+                suspectList.length
+                ? suspectList[
+                    index %
+                    suspectList.length
+                ]
+                : null;
+
+        }
+    );
+
+
+    players[detectiveId].role =
+        "detective";
+
+    players[accusedId].role =
+        "accused";
+
+
+    gameEndTime =
+        Date.now() +
+        (15 * 60 * 1000);
+
+
+    playerIds.forEach(id=>{
+
+        const role =
+            players[id].role;
+
+        const suspectIndex =
+            suspectIds.indexOf(id);
+
+
+        const roleData =
+            getRoleData(
+                role,
+                currentCase,
+                suspectIndex < 0
+                    ? 0
+                    : suspectIndex
+            );
+
+
+        const payload = {
+
+            type:"GAME_START",
+
+            round:
+                roundNumber,
+
+            caseIndex:
+                selectedCaseIndex,
+
+            caseTitle:
+                currentCase.title,
+
+            caseStory:
+                currentCase.story,
+
+            evidence:
+                currentCase.evidence,
+
+            role:
+                role,
+
+            roleName:
+                roleData.name,
+
+            roleDescription:
+                roleData.description,
+
+            secret:
+                roleData.secret,
+
+            script:
+                roleData.script,
+
+            endTime:
+                gameEndTime
+
+        };
+
+
+        if(id === myId){
+
+            receiveGameStart(
+                payload
+            );
+
+        }else{
+
+            sendToPlayer(
+                id,
+                payload
+            );
+
+        }
+
+    });
+
+
+    broadcast({
+        type:"LOBBY_STATE",
+
+        players:JSON.parse(
+            JSON.stringify(players)
+        ),
+
+        scores:{
+            ...scores
+        },
+
+        selectedCaseIndex:
+            selectedCaseIndex,
+
+        round:
+            roundNumber
+    });
+
+
+    showScreen(
+        "gameScreen"
+    );
+
+    renderGame();
+
+    startTimer();
+
+}
+
+
+/* =========================================================
+   RECEIVE GAME START
+========================================================= */
+
+function receiveGameStart(data){
+
+    gameStarted = true;
+
+    roundFinished = false;
+
+    roundNumber =
+        Number(data.round || roundNumber);
+
+    selectedCaseIndex =
+        Number(
+            data.caseIndex ??
+            selectedCaseIndex
+        );
+
+
+    currentCase = {
+
+        title:
+            data.caseTitle || "القضية",
+
+        story:
+            data.caseStory || "",
+
+        evidence:
+            Array.isArray(data.evidence)
+                ? data.evidence
+                : []
+
+    };
+
+
+    myRole =
+        data.role || null;
+
+
+    gameEndTime =
+        Number(data.endTime || 0);
+
+
+    if(myId && players[myId]){
+
+        players[myId].role =
+            myRole;
+
+    }
+
+
+    if(data.players){
+
+        players =
+            data.players;
+
+    }
+
+
+    showScreen(
+        "gameScreen"
+    );
+
+    renderGame();
+
+    renderVoting();
+
+    startTimer();
+
+}
+
+
+/* =========================================================
+   GAME RENDER
+========================================================= */
+
+function renderGame(){
+
+    if(!currentCase){
+        return;
+    }
+
+
+    const title =
+        $("gameCaseTitle");
+
+    if(title){
+
+        title.textContent =
+            currentCase.title;
+
+    }
+
+
+    const topTitle =
+        $("gameCaseTitleTop");
+
+    if(topTitle){
+
+        topTitle.textContent =
+            currentCase.title;
+
+    }
+
+
+    const roundText =
+        $("gameRoundText");
+
+    if(roundText){
+
+        roundText.textContent =
+            `الجولة ${roundNumber}`;
+
+    }
+
+
+    const story =
+        $("gameCaseStory");
+
+    if(story){
+
+        story.textContent =
+            currentCase.story || "";
+
+    }
+
+
+    const evidence =
+        $("evidenceList");
+
+    if(evidence){
+
+        evidence.innerHTML = "";
+
+        (
+            currentCase.evidence || []
+        ).forEach((item,index)=>{
+
+            const div =
+                document.createElement("div");
+
+            div.className =
+                "evidence-item";
+
+            div.textContent =
+                `${index + 1}. ${item}`;
+
+            evidence.appendChild(div);
+
+        });
+
+    }
+
+
+    renderMyRole();
+
+    renderGamePlayers();
+
+}
+
+
+/* =========================================================
+   MY ROLE
+========================================================= */
+
+function renderMyRole(){
+
+    const card =
+        $("myRoleCard");
+
+    if(!card){
+        return;
+    }
+
+
+    let roleData = null;
+
+
+    if(myRole === "detective"){
+
+        roleData =
+            getRoleData(
+                "detective",
+                findFullCase(selectedCaseIndex),
+                0
+            );
+
+    }else if(myRole === "accused"){
+
+        roleData =
+            getRoleData(
+                "accused",
+                findFullCase(selectedCaseIndex),
+                0
+            );
+
+    }else{
+
+        const fullCase =
+            findFullCase(selectedCaseIndex);
+
+        roleData =
+            getRoleData(
+                "suspect",
+                fullCase,
+                getMySuspectIndex()
+            );
+
+    }
+
+
+    if(!roleData){
+        return;
+    }
+
+
+    let roleClass =
+        "role-suspect";
+
+    let icon =
+        "🕵️";
+
+
+    if(myRole === "detective"){
+
+        roleClass =
+            "role-detective";
+
+        icon =
+            "🕵️";
+
+    }
+
+
+    if(myRole === "accused"){
+
+        roleClass =
+            "role-accused";
+
+        icon =
+            "🎭";
+
+    }
+
+
+    card.className =
+        `role-card ${roleClass}`;
+
+
+    card.innerHTML = `
+
+        <div class="role-name">
+            ${icon} ${escapeHtml(roleData.name)}
+        </div>
+
+        <div class="role-description">
+            ${escapeHtml(roleData.description)}
+        </div>
+
+        <div class="secret-box">
+
+            <div class="secret-label">
+                🔒 سرك الخاص
+            </div>
+
+            <div class="secret-text">
+                ${escapeHtml(roleData.secret)}
+            </div>
+
+        </div>
+
+        <div class="script-box">
+
+            <div class="script-label">
+                📜 السيناريو الخاص بك
+            </div>
+
+            <div class="script-text">
+                ${escapeHtml(roleData.script)}
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   FULL CASE LOOKUP
+========================================================= */
+
+function findFullCase(index){
+
+    return CASES[index] || currentCase;
+
+}
+
+
+function getMySuspectIndex(){
+
+    if(!myId){
+        return 0;
+    }
+
+    const ids =
+        Object.keys(players);
+
+    const suspects =
+        ids.filter(
+            id =>
+                players[id] &&
+                players[id].role === "suspect"
+        );
+
+    const index =
+        suspects.indexOf(myId);
+
+    return index < 0 ? 0 : index;
+
+}
+
+
+/* =========================================================
+   GAME PLAYERS
+========================================================= */
+
+function renderGamePlayers(){
+
+    const list =
+        $("gamePlayersList");
+
+    if(!list){
+        return;
+    }
+
+
+    list.innerHTML = "";
+
+
+    Object.keys(players)
+        .forEach(id=>{
+
+            const player =
+                players[id];
+
+            const item =
+                document.createElement("div");
+
+            item.className =
+                "player-item";
+
+
+            let roleText =
+                "مشارك";
+
+            if(
+                roundFinished &&
+                player.role === "accused"
+            ){
+
+                roleText =
+                    "🎭 المتهم";
+
+            }
+
+
+            if(
+                roundFinished &&
+                player.role === "detective"
+            ){
+
+                roleText =
+                    "🕵️ المحقق";
+
+            }
+
+
+            item.innerHTML = `
+
+                <div>
+                    <span class="connection-dot online"></span>
+                    <span class="player-name">
+                        ${escapeHtml(player.name)}
+                    </span>
+                </div>
+
+                <div class="player-host">
+                    ${roleText}
+                </div>
+
+            `;
+
+
+            list.appendChild(item);
+
+        });
+
+}
+
+
+/* =========================================================
+   TIMER
+========================================================= */
+
+function startTimer(){
+
+    if(timerInterval){
+
+        clearInterval(
+            timerInterval
+        );
+
+    }
+
+
+    updateTimer();
+
+
+    timerInterval =
+        setInterval(
+            updateTimer,
+            500
+        );
+
+}
+
+
+function updateTimer(){
+
+    const el =
+        $("timerValue");
+
+    if(!el){
+        return;
+    }
+
+
+    if(!gameStarted){
+
+        el.textContent =
+            "00:00";
+
+        return;
+
+    }
+
+
+    const remaining =
+        Math.max(
+            0,
+            gameEndTime -
+            Date.now()
+        );
+
+
+    const totalSeconds =
+        Math.ceil(
+            remaining / 1000
+        );
+
+
+    const minutes =
+        Math.floor(
+            totalSeconds / 60
+        );
+
+
+    const seconds =
+        totalSeconds % 60;
+
+
+    el.textContent =
+        `${String(minutes).padStart(2,"0")}:${String(seconds).padStart(2,"0")}`;
+
+
+    el.classList.remove(
+        "warning",
+        "danger"
+    );
+
+
+    if(totalSeconds <= 60){
+
+        el.classList.add(
+            "danger"
+        );
+
+    }else if(totalSeconds <= 180){
+
+        el.classList.add(
+            "warning"
+        );
+
+    }
+
+
+    if(
+        remaining <= 0 &&
+        gameStarted &&
+        isHost &&
+        !roundFinished
+    ){
+
+        finishVoting();
+
+    }
+
+}
+
+
+/* =========================================================
+   VOTING
+========================================================= */
+
+function renderVoting(){
+
+    const grid =
+        $("voteGrid");
+
+    if(!grid){
+        return;
+    }
+
+
+    grid.innerHTML = "";
+
+
+    if(myRole === "accused"){
+
+        setStatus(
+            "voteStatus",
+            "🎭 أنت المتهم الحقيقي، لذلك لا يمكنك التصويت."
+        );
+
+        return;
+
+    }
+
+
+    const ids =
+        Object.keys(players);
+
+
+    ids.forEach(id=>{
+
+        if(id === myId){
+            return;
+        }
+
+
+        const player =
+            players[id];
+
+        const button =
+            document.createElement("button");
+
+        button.className =
+            "vote-btn";
+
+        button.textContent =
+            player.name;
+
+        button.type =
+            "button";
+
+        button.onclick =
+            ()=>submitVote(id);
+
+        grid.appendChild(
+            button
+        );
+
+    });
+
+
+    setStatus(
+        "voteStatus",
+        "اختار الشخص اللي شايف إنه المتهم."
+    );
+
+}
+
+
+function submitVote(targetId){
+
+    if(
+        !gameStarted ||
+        roundFinished
+    ){
+
+        return;
+
+    }
+
+
+    if(myRole === "accused"){
+
+        setStatus(
+            "voteStatus",
+            "المتهم لا يستطيع التصويت.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(votes[myId]){
+
+        setStatus(
+            "voteStatus",
+            "أنت صوتت بالفعل.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(!players[targetId]){
+        return;
+    }
+
+
+    if(targetId === myId){
+
+        setStatus(
+            "voteStatus",
+            "مينفعش تصوت لنفسك.",
+            "error"
+        );
+
+        return;
+
+    }
+
+
+    if(isHost){
+
+        recordVote(
+            myId,
+            targetId
+        );
+
+    }else{
+
+        const sent =
+            sendToHost({
+
+                type:"VOTE",
+
+                playerId:
+                    myId,
+
+                targetId:
+                    targetId
+
+            });
+
+
+        if(!sent){
+
+            setStatus(
+                "voteStatus",
+                "الاتصال بالـHost مش متاح.",
+                "error"
+            );
+
+            return;
+
+        }
+
+
+        votes[myId] =
+            targetId;
+
+
+        disableVoteButtons();
+
+
+        setStatus(
+            "voteStatus",
+            "تم إرسال تصويتك. مستني باقي اللاعبين...",
+            "success"
+        );
+
+    }
+
+}
+
+
+function disableVoteButtons(){
+
+    document
+        .querySelectorAll(".vote-btn")
+        .forEach(button=>{
+
+            button.disabled =
+                true;
+
+            button.classList.add(
+                "voted"
+            );
+
+        });
+
+}
+
+
+/* =========================================================
+   VOTE RECORDING
+========================================================= */
+
+function recordVote(
+    voterId,
+    targetId
+){
+
+    if(!isHost){
+        return;
+    }
+
+
+    if(
+        !gameStarted ||
+        roundFinished
+    ){
+
+        return;
+
+    }
+
+
+    if(!players[voterId]){
+        return;
+    }
+
+
+    if(!players[targetId]){
+        return;
+    }
+
+
+    if(voterId === accusedId){
+        return;
+    }
+
+
+    if(voterId === targetId){
+        return;
+    }
+
+
+    if(votes[voterId]){
+        return;
+    }
+
+
+    votes[voterId] =
+        targetId;
+
+
+    const eligibleCount =
+        Object.keys(players)
+            .filter(
+                id =>
+                    id !== accusedId
+            )
+            .length;
+
+
+    const votedCount =
+        Object.keys(votes)
+            .length;
+
+
+    broadcast({
+
+        type:"VOTE_UPDATE",
+
+        votedCount:
+            votedCount,
+
+        total:
+            eligibleCount
+
+    });
+
+
+    if(votedCount >= eligibleCount){
+
+        finishVoting();
+
+    }else{
+
+        if(myId === voterId){
+
+            disableVoteButtons();
+
+            setStatus(
+                "voteStatus",
+                `تم التصويت: ${votedCount}/${eligibleCount}`,
+                "success"
+            );
+
+        }
+
+    }
+
+}
+
+
+function receiveVoteUpdate(data){
+
+    if(!data){
+        return;
+    }
+
+
+    const voted =
+        Number(data.votedCount || 0);
+
+    const total =
+        Number(data.total || 0);
+
+
+    setStatus(
+        "voteStatus",
+        `تم تسجيل ${voted} من ${total} أصوات.`
+    );
+
+}
+
+
+/* =========================================================
+   FINISH VOTING
+========================================================= */
+
+function finishVoting(){
+
+    if(
+        !isHost ||
+        roundFinished
+    ){
+
+        return;
+
+    }
+
+
+    roundFinished = true;
+
+    gameStarted = false;
+
+
+    if(timerInterval){
+
+        clearInterval(
+            timerInterval
+        );
+
+        timerInterval = null;
+
+    }
+
+
+    const voteCounts = {};
+
+
+    Object.values(votes)
+        .forEach(targetId=>{
+
+            voteCounts[targetId] =
+                (
+                    voteCounts[targetId] || 0
+                ) + 1;
+
+        });
+
+
+    const accusedVotes =
+        voteCounts[accusedId] || 0;
+
+
+    if(accusedVotes === 0){
+
+        scores[accusedId] =
+            (
+                scores[accusedId] || 0
+            ) + 1;
+
+    }else{
+
+        Object.keys(votes)
+            .forEach(voterId=>{
+
+                if(
+                    votes[voterId] ===
+                    accusedId
+                ){
+
+                    scores[voterId] =
+                        (
+                            scores[voterId] || 0
+                        ) + 1;
+
+                }
+
+            });
+
+    }
+
+
+    const resultData = {
+
+        type:"RESULT",
+
+        round:
+            roundNumber,
+
+        accusedId:
+            accusedId,
+
+        detectiveId:
+            detectiveId,
+
+        votes:{
+            ...votes
+        },
+
+        voteCounts:{
+            ...voteCounts
+        },
+
+        accusedVotes:
+            accusedVotes,
+
+        scores:{
+            ...scores
+        },
+
+        players:
+            JSON.parse(
+                JSON.stringify(players)
+            ),
+
+        caseData:
+            CASES[selectedCaseIndex]
+
+    };
+
+
+    receiveResult(
+        resultData
+    );
+
+
+    broadcast(
+        resultData
+    );
+
+}
+
+
+/* =========================================================
+   RESULT
+========================================================= */
+
+function receiveResult(data){
+
+    if(!data){
+        return;
+    }
+
+
+    roundFinished = true;
+
+    gameStarted = false;
+
+
+    if(timerInterval){
+
+        clearInterval(
+            timerInterval
+        );
+
+        timerInterval = null;
+
+    }
+
+
+    if(data.players){
+
+        players =
+            data.players;
+
+    }
+
+
+    if(data.scores){
+
+        scores =
+            data.scores;
+
+    }
+
+
+    if(typeof data.accusedId !== "undefined"){
+
+        accusedId =
+            data.accusedId;
+
+    }
+
+
+    if(typeof data.detectiveId !== "undefined"){
+
+        detectiveId =
+            data.detectiveId;
+
+    }
+
+
+    showScreen(
+        "resultScreen"
+    );
+
+
+    showResult(
+        data
+    );
+
+}
+
+
+/* =========================================================
+   SHOW RESULT
+========================================================= */
+
+function showResult(data){
+
+    const round =
+        $("resultRound");
+
+    if(round){
+
+        round.textContent =
+            `الجولة ${data.round || roundNumber}`;
+
+    }
+
+
+    const accused =
+        $("accusedResult");
+
+
+    const accusedPlayer =
+        players[data.accusedId];
+
+
+    if(accused){
+
+        accused.textContent =
+            accusedPlayer
+            ? accusedPlayer.name
+            : "غير معروف";
+
+    }
+
+
+    const detective =
+        $("resultDetective");
+
+
+    const detectivePlayer =
+        players[data.detectiveId];
+
+
+    if(detective){
+
+        detective.textContent =
+            detectivePlayer
+            ? detectivePlayer.name
+            : "غير معروف";
+
+    }
+
+
+    const message =
+        $("resultMessage");
+
+
+    if(message){
+
+        const accusedVotes =
+            Number(
+                data.accusedVotes || 0
+            );
+
+
+        if(accusedVotes > 0){
+
+            message.textContent =
+                `تم اكتشاف المتهم! حصل على ${accusedVotes} صوت.`;
+
+        }else{
+
+            message.textContent =
+                "المتهم الحقيقي لم يحصل على أي صوت هذه الجولة.";
+
+        }
+
+    }
+
+
+    renderScores(
+        data.scores || scores
+    );
+
+
+    renderVoteDetails(
+        data.votes || {},
+        data.voteCounts || {}
+    );
+
+}
+</script>
+
+<script>
+/* =========================================================
+   THE CASE — FINAL REPAIR LAYER
+   Keeps the original large UI and fixes lobby / PeerJS logic.
+========================================================= */
+
+(function(){
+    "use strict";
+
+    /* ---------- SAFE PEER CREATION ---------- */
+    window.createPeer = function(peerId, timeoutMs = 12000){
+        return new Promise((resolve, reject)=>{
+            let settled = false;
+
+            const options = {
+                debug: 0,
+                config: {
+                    iceServers: [
+                        { urls: "stun:stun.l.google.com:19302" },
+                        { urls: "stun:global.stun.twilio.com:3478" }
+                    ]
+                }
+            };
+
+            let p;
+            try{
+                p = peerId ? new Peer(peerId, options) : new Peer(options);
+            }catch(error){
+                reject(error);
+                return;
+            }
+
+            const timeout = setTimeout(()=>{
+                if(settled) return;
+                settled = true;
+                try{ p.destroy(); }catch(e){}
+                reject(new Error("PeerJS initialization timeout"));
+            }, timeoutMs);
+
+            p.on("open", id=>{
+                if(settled) return;
+                settled = true;
+                clearTimeout(timeout);
+                resolve({peer:p, id:id});
+            });
+
+            p.on("error", error=>{
+                if(settled){
+                    console.error("PeerJS error:", error);
+                    return;
+                }
+                settled = true;
+                clearTimeout(timeout);
+                try{ p.destroy(); }catch(e){}
+                reject(error);
+            });
+        });
+    };
+
+    /* ---------- NAVIGATION ---------- */
+    window.showHome = function(){
+        showScreen("homeScreen");
+    };
+
+    window.showHostScreen = function(){
+        const homeName = $("homeName");
+        const createName = $("createName");
+        if(homeName && createName && homeName.value.trim() && !createName.value.trim()){
+            createName.value = homeName.value.trim();
+        }
+        setStatus("homeStatus", "");
+        setStatus("createStatus", "");
+        showScreen("createScreen");
+        updateCasePreview();
+    };
+
+    window.showJoinScreen = function(){
+        const homeName = $("homeName");
+        const joinName = $("joinName");
+        if(homeName && joinName && homeName.value.trim() && !joinName.value.trim()){
+            joinName.value = homeName.value.trim();
+        }
+        setStatus("homeStatus", "");
+        setStatus("joinStatus", "");
+        showScreen("joinScreen");
+    };
+
+    window.previewCase = function(){
+        const select = $("lobbyCaseSelect");
+        if(select){
+            selectedCaseIndex = Number(select.value || 0);
+        }
+        updateCasePreview();
+    };
+
+    /* ---------- CASE PREVIEW / SELECTS ---------- */
+    window.updateCasePreview = function(){
+        const createSelect = $("lobbyCaseSelect");
+        const lobbySelect = $("lobbyCaseSelect2");
+
+        if(isHost && lobbySelect){
+            selectedCaseIndex = Number(lobbySelect.value || selectedCaseIndex || 0);
+        }else if(createSelect){
+            selectedCaseIndex = Number(createSelect.value || selectedCaseIndex || 0);
+        }
+
+        const selected = CASES[selectedCaseIndex];
+        if(!selected) return;
+
+        if(createSelect){
+            createSelect.value = String(selectedCaseIndex);
+        }
+        if(lobbySelect){
+            lobbySelect.value = String(selectedCaseIndex);
+        }
+
+        const createPreview = $("casePreview");
+        if(createPreview){
+            createPreview.innerHTML = `
+                <div class="case-preview-title">${escapeHtml(selected.title)}</div>
+                <div class="case-preview-meta">
+                    الصعوبة: ${escapeHtml(difficultyArabic(selected.difficulty))}
+                </div>
+                <div class="case-preview-story">${escapeHtml(selected.story)}</div>
+            `;
+        }
+
+        const lobbyPreview = $("lobbyCasePreview");
+        if(lobbyPreview){
+            lobbyPreview.innerHTML = `
+                <div class="case-preview-title">${escapeHtml(selected.title)}</div>
+                <div class="case-preview-meta">
+                    الصعوبة: ${escapeHtml(difficultyArabic(selected.difficulty))}
+                </div>
+                <div class="case-preview-story">${escapeHtml(selected.story)}</div>
+            `;
+        }
+
+        currentCase = selected;
+    };
+
+    /* ---------- LOBBY RENDER ---------- */
+    window.refreshLobby = function(){
+        const list = $("lobbyPlayers");
+        const ids = Object.keys(players);
+
+        if(list){
+            list.innerHTML = "";
+            ids.forEach(id=>{
+                const player = players[id];
+                const row = document.createElement("div");
+                row.className = "player-item";
+                const online = id === myId || (connections[id] && connections[id].open);
+                row.innerHTML = `
+                    <div>
+                        <span class="connection-dot ${online ? "online" : ""}"></span>
+                        <span class="player-name">${escapeHtml(player.name)}</span>
+                    </div>
+                    <div class="player-host">${id === myId && isHost ? "HOST" : ""}</div>
+                `;
+                list.appendChild(row);
+            });
+
+            if(!ids.length){
+                list.innerHTML = `<div class="empty">مفيش لاعبين لسه.</div>`;
+            }
+        }
+
+        const count = $("playerCount");
+        if(count) count.textContent = String(ids.length);
+
+        const round = $("lobbyRoundText");
+        if(round) round.textContent = `الجولة ${roundNumber}`;
+
+        const waiting = $("lobbyWaitingText");
+        const controls = $("lobbyHostControls");
+        if(isHost){
+            controls?.classList.remove("hidden");
+            waiting?.classList.add("hidden");
+        }else{
+            controls?.classList.add("hidden");
+            waiting?.classList.remove("hidden");
+        }
+
+        const start = $("startGameBtn");
+        if(start){
+            start.disabled = !isHost || ids.length < 3;
+            start.textContent = ids.length < 3
+                ? `محتاج ${3 - ids.length} لاعبين كمان`
+                : "🚨 ابدأ التحقيق";
+        }
+
+        const code = $("lobbyGameCode");
+        if(code) code.textContent = gameCode || "------";
+
+        updateCasePreview();
+    };
+
+    /* ---------- CONNECTION SETUP ---------- */
+    window.setupConnection = function(conn){
+        if(!conn) return;
+
+        conn.on("open",()=>{
+            console.log("Connection opened:", conn.peer);
+            clearConnectionTimeout();
+
+            if(isHost){
+                connections[conn.peer] = conn;
+                refreshLobby();
+            }else{
+                hostConnection = conn;
+            }
+        });
+
+        conn.on("data", data=>handleData(data, conn));
+
+        conn.on("close",()=>{
+            console.log("Connection closed:", conn.peer);
+
+            if(isHost){
+                const playerId = conn.peer;
+                if(players[playerId]){
+                    delete players[playerId];
+                    delete connections[playerId];
+                    delete scores[playerId];
+                    delete votes[playerId];
+                    refreshLobby();
+                    broadcastLobby();
+                }
+            }else{
+                hostConnection = null;
+                setStatus("gameStatus", "الاتصال بالـHost انقطع.", "error");
+                setStatus("lobbyStatus", "الاتصال بالـHost انقطع.", "error");
+            }
+        });
+
+        conn.on("error", error=>console.error("Connection error:", error));
+
+        if(isHost){
+            connections[conn.peer] = conn;
+        }
+    };
+
+    /* ---------- CREATE GAME ---------- */
+    window.createGame = async function(){
+        const input = $("createName");
+        const rawName = input ? input.value.trim() : "";
+
+        if(!rawName){
+            setStatus("createStatus", "اكتب اسمك الأول.", "error");
+            return;
+        }
+
+        myName = safeName(rawName);
+        if(!myName){
+            setStatus("createStatus", "اكتب اسم صحيح.", "error");
+            return;
+        }
+
+        selectedCaseIndex = Number($("lobbyCaseSelect")?.value || 0);
+        currentCase = CASES[selectedCaseIndex];
+        if(!currentCase){
+            setStatus("createStatus", "اختار قضية الأول.", "error");
+            return;
+        }
+
+        if(peer){
+            try{ peer.destroy(); }catch(e){}
+            peer = null;
+        }
+
+        setStatus("createStatus", "جاري إنشاء اللعبة...", "");
+
+        let lastError = null;
+
+        for(let attempt=0; attempt<3; attempt++){
+            try{
+                gameCode = randomCode();
+                const desiredHostId = "THECASE-" + gameCode;
+                const result = await createPeer(desiredHostId, 12000);
+
+                peer = result.peer;
+                myId = result.id;
+                hostPeerId = result.id;
+                isHost = true;
+                hostConnection = null;
+                connections = {};
+                players = {};
+                scores = {};
+                votes = {};
+                roundNumber = 0;
+                gameStarted = false;
+                roundFinished = false;
+                detectiveId = null;
+                accusedId = null;
+                gameEndTime = 0;
+
+                players[myId] = {
+                    id: myId,
+                    name: myName,
+                    role: null,
+                    clue: ""
+                };
+                scores[myId] = 0;
+
+                peer.on("connection", conn=>setupConnection(conn));
+                peer.on("disconnected",()=>console.warn("Host Peer disconnected from signaling server."));
+                peer.on("close",()=>console.warn("Host Peer closed."));
+
+                populateCaseSelects();
+                if($("lobbyCaseSelect")) $("lobbyCaseSelect").value = String(selectedCaseIndex);
+                if($("lobbyCaseSelect2")) $("lobbyCaseSelect2").value = String(selectedCaseIndex);
+                updateCasePreview();
+
+                showScreen("lobbyScreen");
+                refreshLobby();
+                broadcastLobby();
+
+                setStatus("lobbyStatus", "اللعبة اتعملت. ابعت الكود لأصحابك.", "success");
+                return;
+            }catch(error){
+                lastError = error;
+                console.error("Create attempt failed:", error);
+                try{ if(peer) peer.destroy(); }catch(e){}
+                peer = null;
+            }
+        }
+
+        setStatus(
+            "createStatus",
+            lastError && /unavailable|taken|ID/i.test(lastError.message || "")
+                ? "الكود اتعارض. جرّب إنشاء اللعبة تاني."
+                : "فشل إنشاء اللعبة. تأكد إن الإنترنت شغال وجرّب تاني.",
+            "error"
+        );
+    };
+
+    /* ---------- JOIN GAME ---------- */
+    window.joinGame = async function(){
+        const nameInput = $("joinName");
+        const codeInput = $("joinCode");
+        const rawName = nameInput ? nameInput.value.trim() : "";
+        const code = codeInput ? codeInput.value.trim().toUpperCase() : "";
+
+        if(!rawName){
+            setStatus("joinStatus", "اكتب اسمك الأول.", "error");
+            return;
+        }
+
+        if(!/^[A-Z0-9]{6}$/.test(code)){
+            setStatus("joinStatus", "كود اللعبة لازم يكون 6 حروف/أرقام.", "error");
+            return;
+        }
+
+        myName = safeName(rawName);
+        gameCode = code;
+        hostPeerId = "THECASE-" + gameCode;
+        isHost = false;
+        pendingJoin = true;
+
+        if(peer){
+            try{ peer.destroy(); }catch(e){}
+            peer = null;
+        }
+
+        hostConnection = null;
+        connections = {};
+        votes = {};
+        roundFinished = false;
+        gameStarted = false;
+
+        setStatus("joinStatus", "جاري الاتصال باللعبة...", "");
+
+        try{
+            const result = await createPeer(null, 12000);
+            peer = result.peer;
+            myId = result.id;
+
+            const conn = peer.connect(hostPeerId, {reliable:true, serialization:"json"});
+            hostConnection = conn;
+            connections.host = conn;
+            setupConnection(conn);
+
+            let joined = false;
+            const joinTimeout = setTimeout(()=>{
+                if(joined) return;
+                setStatus("joinStatus", "مش قادر أوصل للـHost. تأكد من الكود والـHost.", "error");
+            }, 10000);
+
+            conn.on("open",()=>{
+                joined = true;
+                clearTimeout(joinTimeout);
+
+                const sent = sendToHost({
+                    type: "JOIN",
+                    player: {
+                        id: myId,
+                        name: myName
+                    }
+                });
+
+                if(!sent){
+                    setStatus("joinStatus", "الاتصال فتح لكن إرسال بياناتك فشل. جرّب تاني.", "error");
+                    return;
+                }
+
+                setStatus("joinStatus", "تم الاتصال! جاري دخول الـLobby...", "success");
+            });
+        }catch(error){
+            console.error("Join failed:", error);
+            setStatus("joinStatus", "فشل الاتصال. تأكد من الكود وحاول تاني.", "error");
+            try{ if(peer) peer.destroy(); }catch(e){}
+            peer = null;
+            hostConnection = null;
+        }
+    };
+
+    /* ---------- CLIENT LOBBY ---------- */
+    window.receiveLobbyState = function(data){
+        if(!data) return;
+
+        if(data.gameCode) gameCode = String(data.gameCode);
+        if(data.players) players = data.players;
+        if(data.scores) scores = data.scores;
+        if(typeof data.selectedCaseIndex !== "undefined") selectedCaseIndex = Number(data.selectedCaseIndex);
+        if(typeof data.round !== "undefined") roundNumber = Number(data.round);
+
+        currentCase = CASES[selectedCaseIndex] || currentCase;
+
+        const code = $("lobbyGameCode");
+        if(code) code.textContent = gameCode || "------";
+
+        if($("lobbyCaseSelect2")) $("lobbyCaseSelect2").value = String(selectedCaseIndex);
+        if($("lobbyCaseSelect")) $("lobbyCaseSelect").value = String(selectedCaseIndex);
+
+        refreshLobby();
+        showScreen("lobbyScreen");
+
+        if(pendingJoin){
+            pendingJoin = false;
+            setStatus("lobbyStatus", "دخلت الـLobby بنجاح. مستني الـHost يبدأ.", "success");
+        }
+    };
+
+    /* ---------- RESULT / LOBBY ---------- */
+    window.receiveReturnLobby = function(data){
+        gameStarted = false;
+        roundFinished = true;
+        if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+
+        if(data){
+            if(typeof data.selectedCaseIndex !== "undefined") selectedCaseIndex = Number(data.selectedCaseIndex);
+            if(typeof data.roundNumber !== "undefined") roundNumber = Number(data.roundNumber);
+            if(data.players) players = data.players;
+            if(data.scores) scores = data.scores;
+        }
+
+        currentCase = CASES[selectedCaseIndex] || currentCase;
+        votes = {};
+        detectiveId = null;
+        accusedId = null;
+        myRole = null;
+
+        if($("lobbyCaseSelect2")) $("lobbyCaseSelect2").value = String(selectedCaseIndex);
+        if($("lobbyCaseSelect")) $("lobbyCaseSelect").value = String(selectedCaseIndex);
+
+        refreshLobby();
+        updateCasePreview();
+        showScreen("lobbyScreen");
+        setStatus("lobbyStatus", "رجعنا للـLobby. تقدروا تبدأوا جولة جديدة.", "success");
+    };
+
+    window.returnToLobby = function(){
+        if(!isHost){
+            sendToHost({type:"REQUEST_LOBBY"});
+            return;
+        }
+
+        gameStarted = false;
+        roundFinished = true;
+        if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+        votes = {};
+        myRole = null;
+        detectiveId = null;
+        accusedId = null;
+
+        Object.keys(players).forEach(id=>{
+            players[id].role = null;
+            players[id].clue = "";
+        });
+
+        broadcast({
+            type:"RETURN_LOBBY",
+            selectedCaseIndex:selectedCaseIndex,
+            roundNumber:roundNumber,
+            players:JSON.parse(JSON.stringify(players)),
+            scores:{...scores}
+        });
+
+        showScreen("lobbyScreen");
+        refreshLobby();
+        broadcastLobby();
+        setStatus("lobbyStatus", "رجعنا للـLobby. تقدروا تبدأوا جولة جديدة.", "success");
+    };
+
+    /* ---------- SCORES / VOTE DETAILS ---------- */
+    window.renderScores = function(scoreData){
+        const container = $("scoresList");
+        if(!container) return;
+        container.innerHTML = "";
+
+        const sorted = Object.values(players)
+            .map(player=>({
+                ...player,
+                score:Number(scoreData?.[player.id] ?? scores[player.id] ?? 0)
+            }))
+            .sort((a,b)=>b.score-a.score);
+
+        sorted.forEach((player,index)=>{
+            const row = document.createElement("div");
+            row.className = "score-row";
+            row.innerHTML = `
+                <span>${index+1}</span>
+                <strong>${escapeHtml(player.name)}</strong>
+                <span>${player.score} نقطة</span>
+            `;
+            container.appendChild(row);
+        });
+    };
+
+    window.renderVoteDetails = function(data, voteCountsArg){
+        const container = $("voteDetails");
+        if(!container) return;
+        container.innerHTML = "";
+
+        const payload = data && data.votes ? data : {votes:data || {}, voteCounts:voteCountsArg || {}};
+        const allPlayers = payload.players || players;
+        const allVotes = payload.votes || {};
+
+        Object.values(allPlayers).forEach(player=>{
+            const targetId = allVotes[player.id];
+            if(!targetId) return;
+            const target = allPlayers[targetId];
+
+            const row = document.createElement("div");
+            row.className = "vote-detail-row";
+            row.innerHTML = `
+                <span>${escapeHtml(player.name)}</span>
+                <span>→ ${escapeHtml(target ? target.name : "غير معروف")}</span>
+            `;
+            container.appendChild(row);
+        });
+
+        if(!container.children.length){
+            container.innerHTML = `<div class="empty-state">مفيش أصوات مسجلة.</div>`;
+        }
+    };
+
+    /* ---------- COPY ---------- */
+    window.copyRoomCode = async function(){
+        if(!gameCode) return;
+        try{
+            await navigator.clipboard.writeText(gameCode);
+            setStatus("lobbyStatus", "الكود اتنسخ ✅", "success");
+        }catch(e){
+            setStatus("lobbyStatus", "الكود: " + gameCode, "success");
+        }
+    };
+
+    /* ---------- LEAVE ---------- */
+    window.leaveGame = function(){
+        if(!confirm("متأكد إنك عايز تخرج من اللعبة؟")) return;
+        leaveRoom();
+    };
+
+    window.leaveRoom = function(){
+        if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+
+        Object.values(connections).forEach(conn=>{
+            try{ conn.close(); }catch(e){}
+        });
+        connections = {};
+        hostConnection = null;
+
+        if(peer){
+            try{ peer.destroy(); }catch(e){}
+        }
+
+        peer = null;
+        players = {};
+        votes = {};
+        scores = {};
+        gameStarted = false;
+        roundFinished = false;
+        myRole = null;
+        detectiveId = null;
+        accusedId = null;
+        gameCode = "";
+        hostPeerId = "";
+        myId = null;
+        isHost = false;
+        roundNumber = 0;
+        currentCase = CASES[0] || null;
+        selectedCaseIndex = 0;
+
+        showScreen("homeScreen");
+        setStatus("homeStatus", "");
+    };
+
+    /* ---------- DATA HANDLERS ---------- */
+    window.handleHostData = function(data, conn){
+        if(!data || !data.type) return;
+
+        if(data.type === "JOIN"){
+            if(gameStarted || roundFinished === false && gameStarted) return;
+            if(!data.player || !data.player.id) return;
+
+            const id = String(data.player.id);
+            const name = safeName(data.player.name || "Player");
+            if(!name) return;
+
+            players[id] = {
+                id:id,
+                name:name,
+                role:null,
+                clue:""
+            };
+
+            if(typeof scores[id] !== "number") scores[id] = 0;
+            if(conn) connections[id] = conn;
+
+            sendToPlayer(id,{
+                type:"LOBBY_STATE",
+                gameCode:gameCode,
+                players:JSON.parse(JSON.stringify(players)),
+                scores:{...scores},
+                selectedCaseIndex:selectedCaseIndex,
+                round:roundNumber
+            });
+
+            refreshLobby();
+            broadcastLobby();
+            return;
+        }
+
+        if(data.type === "VOTE"){
+            recordVote(String(data.playerId || data.voterId || ""), String(data.targetId || ""));
+            return;
+        }
+
+        if(data.type === "REQUEST_LOBBY"){
+            sendToPlayer(conn?.peer,{
+                type:"LOBBY_STATE",
+                gameCode:gameCode,
+                players:JSON.parse(JSON.stringify(players)),
+                scores:{...scores},
+                selectedCaseIndex:selectedCaseIndex,
+                round:roundNumber
+            });
+            return;
+        }
+
+        if(data.type === "PING"){
+            sendToPlayer(conn?.peer,{type:"PONG"});
+        }
+    };
+
+    window.handleClientData = function(data){
+        if(!data || !data.type) return;
+
+        if(data.type === "LOBBY_STATE") return receiveLobbyState(data);
+        if(data.type === "GAME_START") return receiveGameStart(data);
+        if(data.type === "VOTE_UPDATE") return receiveVoteUpdate(data);
+        if(data.type === "RESULT") return receiveResult(data);
+        if(data.type === "RETURN_LOBBY") return receiveReturnLobby(data);
+    };
+
+    window.handleData = function(data, conn){
+        if(!data || !data.type) return;
+        if(isHost) handleHostData(data, conn);
+        else handleClientData(data);
+    };
+
+    /* ---------- VOTING FIX: ACCUSED IS A VALID TARGET ---------- */
+    window.renderVoting = function(){
+        const grid = $("voteGrid");
+        if(!grid) return;
+        grid.innerHTML = "";
+
+        if(!gameStarted){
+            setStatus("voteStatus", "");
+            return;
+        }
+
+        if(myRole === "accused"){
+            setStatus("voteStatus", "🎭 أنت المتهم الحقيقي، لذلك لا يمكنك التصويت.");
+            return;
+        }
+
+        if(Object.prototype.hasOwnProperty.call(votes, myId)){
+            disableVoteButtons();
+        }
+
+        Object.keys(players).forEach(id=>{
+            if(id === myId) return;
+            const player = players[id];
+            const button = document.createElement("button");
+            button.className = "vote-btn";
+            button.type = "button";
+            button.textContent = player.name;
+            button.disabled = Object.prototype.hasOwnProperty.call(votes, myId);
+            button.onclick = ()=>submitVote(id);
+            grid.appendChild(button);
+        });
+
+        const eligible = Object.keys(players).filter(id=>id !== accusedId).length;
+        const count = Object.keys(votes).filter(id=>id !== accusedId).length;
+        setStatus("voteStatus", `التصويت: ${count}/${eligible}`);
+    };
+
+    window.submitVote = function(targetId){
+        if(!gameStarted || roundFinished) return;
+        if(myRole === "accused"){
+            setStatus("voteStatus", "المتهم لا يستطيع التصويت.", "error");
+            return;
+        }
+        if(!players[targetId] || targetId === myId) return;
+        if(Object.prototype.hasOwnProperty.call(votes, myId)){
+            setStatus("voteStatus", "أنت صوتت بالفعل.", "error");
+            return;
+        }
+
+        if(isHost){
+            recordVote(myId, targetId);
+            return;
+        }
+
+        if(!hostConnection || !hostConnection.open){
+            setStatus("voteStatus", "الاتصال بالـHost مش متاح.", "error");
+            return;
+        }
+
+        const sent = sendToHost({
+            type:"VOTE",
+            playerId:myId,
+            targetId:targetId
+        });
+
+        if(!sent){
+            setStatus("voteStatus", "فشل إرسال التصويت.", "error");
+            return;
+        }
+
+        votes[myId] = targetId;
+        disableVoteButtons();
+        const eligible = Object.keys(players).filter(id=>id !== accusedId).length;
+        const count = Object.keys(votes).filter(id=>id !== accusedId).length;
+        setStatus("voteStatus", `تم تسجيل تصويتك: ${count}/${eligible}`, "success");
+    };
+
+    window.disableVoteButtons = function(){
+        document.querySelectorAll(".vote-btn").forEach(button=>{
+            button.disabled = true;
+            button.classList.add("voted");
+        });
+    };
+
+    window.recordVote = function(voterId,targetId){
+        if(!isHost || !gameStarted || roundFinished) return;
+        if(!players[voterId] || !players[targetId]) return;
+        if(voterId === accusedId) return;
+        if(voterId === targetId) return;
+        if(Object.prototype.hasOwnProperty.call(votes,voterId)) return;
+
+        votes[voterId] = targetId;
+
+        const eligibleCount = Object.keys(players).filter(id=>id !== accusedId).length;
+        const votedCount = Object.keys(votes).filter(id=>id !== accusedId).length;
+
+        broadcast({
+            type:"VOTE_UPDATE",
+            votedCount:votedCount,
+            total:eligibleCount
+        });
+
+        if(votedCount >= eligibleCount){
+            finishVoting();
+        }
+    };
+
+    window.finishVoting = function(){
+        if(!isHost || roundFinished) return;
+
+        roundFinished = true;
+        gameStarted = false;
+        if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+
+        const voteCounts = {};
+        Object.values(votes).forEach(targetId=>{
+            voteCounts[targetId] = (voteCounts[targetId] || 0) + 1;
+        });
+
+        const accusedVotes = voteCounts[accusedId] || 0;
+
+        if(accusedVotes === 0){
+            scores[accusedId] = (scores[accusedId] || 0) + 1;
+        }else{
+            Object.keys(votes).forEach(voterId=>{
+                if(votes[voterId] === accusedId){
+                    scores[voterId] = (scores[voterId] || 0) + 1;
+                }
+            });
+        }
+
+        const resultData = {
+            type:"RESULT",
+            round:roundNumber,
+            accusedId:accusedId,
+            detectiveId:detectiveId,
+            votes:{...votes},
+            voteCounts:{...voteCounts},
+            accusedVotes:accusedVotes,
+            scores:{...scores},
+            players:JSON.parse(JSON.stringify(players)),
+            caseData:CASES[selectedCaseIndex]
+        };
+
+        receiveResult(resultData);
+        broadcast(resultData);
+    };
+
+    /* ---------- START GAME FIX ---------- */
+    window.startGame = function(){
+        if(!isHost) return;
+
+        const playerIds = Object.keys(players);
+        if(playerIds.length < 3){
+            setStatus("lobbyStatus", "لازم يكون فيه 3 لاعبين على الأقل عشان تبدأ.", "error");
+            return;
+        }
+
+        selectedCaseIndex = Number($("lobbyCaseSelect2")?.value ?? $("lobbyCaseSelect")?.value ?? selectedCaseIndex);
+        currentCase = CASES[selectedCaseIndex];
+        if(!currentCase){
+            setStatus("lobbyStatus", "اختار قضية الأول.", "error");
+            return;
+        }
+
+        roundNumber += 1;
+        gameStarted = true;
+        roundFinished = false;
+        votes = {};
+        detectiveId = null;
+        accusedId = null;
+
+        playerIds.forEach(id=>{
+            if(typeof scores[id] !== "number") scores[id] = 0;
+            players[id].role = null;
+            players[id].clue = "";
+        });
+
+        const shuffled = shuffle(playerIds);
+        detectiveId = shuffled[0];
+        accusedId = shuffled[1];
+        const suspectIds = shuffled.slice(2);
+        const suspectList = currentCase.roles?.suspects || [];
+
+        suspectIds.forEach((id,index)=>{
+            players[id].role = "suspect";
+            players[id].clue = suspectList.length ? suspectList[index % suspectList.length] : null;
+        });
+        players[detectiveId].role = "detective";
+        players[accusedId].role = "accused";
+
+        gameEndTime = Date.now() + 15 * 60 * 1000;
+
+        playerIds.forEach(id=>{
+            const role = players[id].role;
+            const suspectIndex = suspectIds.indexOf(id);
+            const roleData = getRoleData(role,currentCase,suspectIndex < 0 ? 0 : suspectIndex);
+
+            const payload = {
+                type:"GAME_START",
+                round:roundNumber,
+                caseIndex:selectedCaseIndex,
+                caseTitle:currentCase.title,
+                caseStory:currentCase.story,
+                evidence:currentCase.evidence || [],
+                role:role,
+                roleName:roleData.name,
+                roleDescription:roleData.description,
+                secret:roleData.secret,
+                script:roleData.script,
+                endTime:gameEndTime,
+                players:JSON.parse(JSON.stringify(players))
+            };
+
+            if(id === myId) receiveGameStart(payload);
+            else sendToPlayer(id,payload);
+        });
+
+        showScreen("gameScreen");
+        renderGame();
+        startTimer();
+    };
+
+    /* ---------- GAME START RECEIVER: PRIVATE ROLE DATA ---------- */
+    window.receiveGameStart = function(data){
+        if(!data) return;
+
+        gameStarted = true;
+        roundFinished = false;
+        roundNumber = Number(data.round || roundNumber);
+        selectedCaseIndex = Number(data.caseIndex ?? selectedCaseIndex);
+        currentCase = CASES[selectedCaseIndex] || {
+            title:data.caseTitle || "القضية",
+            story:data.caseStory || "",
+            evidence:data.evidence || []
+        };
+
+        myRole = data.role || null;
+        gameEndTime = Number(data.endTime || 0);
+        votes = {};
+
+        if(data.players) players = data.players;
+        if(myId && players[myId]) players[myId].role = myRole;
+
+        /* Use the exact private data sent to this phone. */
+        window.myRoleData = {
+            name:data.roleName || "دورك",
+            description:data.roleDescription || "",
+            secret:data.secret || "",
+            script:data.script || ""
+        };
+
+        showScreen("gameScreen");
+        renderGame();
+        renderVoting();
+        startTimer();
+    };
+
+    /* ---------- PRIVATE ROLE RENDER ---------- */
+    const originalRenderMyRole = window.renderMyRole;
+    window.renderMyRole = function(){
+        const card = $("myRoleCard");
+        const data = window.myRoleData;
+
+        if(card && data){
+            let roleClass = "role-suspect";
+            let icon = "🕵️";
+            if(myRole === "detective"){ roleClass = "role-detective"; icon = "🕵️"; }
+            if(myRole === "accused"){ roleClass = "role-accused"; icon = "🎭"; }
+
+            card.className = `role-card ${roleClass}`;
+            card.innerHTML = `
+                <div class="role-name">${icon} ${escapeHtml(data.name)}</div>
+                <div class="role-description">${escapeHtml(data.description)}</div>
+                <div class="secret-box">
+                    <div class="secret-label">🔒 سرك الخاص</div>
+                    <div class="secret-text">${escapeHtml(data.secret || "لا توجد معلومة سرية.")}</div>
+                </div>
+                <div class="script-box">
+                    <div class="script-label">📜 السيناريو الخاص بك</div>
+                    <div class="script-text">${escapeHtml(data.script || "اتكلم مع باقي اللاعبين وحاول تفهم اللي حصل.")}</div>
+                </div>
+            `;
+            return;
+        }
+
+        if(typeof originalRenderMyRole === "function") originalRenderMyRole();
+    };
+
+    /* ---------- RESULT ---------- */
+    window.receiveResult = function(data){
+        if(!data) return;
+        gameStarted = false;
+        roundFinished = true;
+        if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+
+        scores = data.scores || scores;
+        players = data.players || players;
+        accusedId = data.accusedId ?? accusedId;
+        detectiveId = data.detectiveId ?? detectiveId;
+        votes = data.votes || {};
+
+        showResult(data);
+    };
+
+    /* ---------- INIT ---------- */
+    function initFixedGame(){
+        populateCaseSelects();
+
+        if($("lobbyCaseSelect")){
+            $("lobbyCaseSelect").addEventListener("change",()=>{
+                selectedCaseIndex = Number($("lobbyCaseSelect").value || 0);
+                updateCasePreview();
+            });
+        }
+
+        if($("lobbyCaseSelect2")){
+            $("lobbyCaseSelect2").addEventListener("change",()=>{
+                if(!isHost) return;
+                selectedCaseIndex = Number($("lobbyCaseSelect2").value || 0);
+                updateCasePreview();
+                broadcastLobby();
+            });
+        }
+
+        $("showCreateBtn")?.addEventListener("click",showHostScreen);
+        $("showJoinBtn")?.addEventListener("click",showJoinScreen);
+        $("createGameBtn")?.addEventListener("click",createGame);
+        $("joinGameBtn")?.addEventListener("click",joinGame);
+        $("backHomeFromCreateBtn")?.addEventListener("click",showHome);
+        $("backHomeFromJoinBtn")?.addEventListener("click",showHome);
+        $("startGameBtn")?.addEventListener("click",startGame);
+        $("leaveLobbyBtn")?.addEventListener("click",leaveGame);
+        $("leaveGameBtn")?.addEventListener("click",leaveGame);
+        $("nextRoundBtn")?.addEventListener("click",returnToLobby);
+        $("backLobbyBtn")?.addEventListener("click",returnToLobby);
+
+        $("joinCode")?.addEventListener("input",e=>{
+            e.target.value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g,"").slice(0,6);
+        });
+
+        $("createName")?.addEventListener("keydown",e=>{
+            if(e.key === "Enter") createGame();
+        });
+        $("joinName")?.addEventListener("keydown",e=>{
+            if(e.key === "Enter") joinGame();
+        });
+        $("joinCode")?.addEventListener("keydown",e=>{
+            if(e.key === "Enter") joinGame();
+        });
+
+        showScreen("homeScreen");
+        updateCasePreview();
+        console.log("THE CASE fixed build initialized.");
+    }
+
+    if(document.readyState === "loading"){
+        document.addEventListener("DOMContentLoaded",initFixedGame,{once:true});
+    }else{
+        initFixedGame();
+    }
+})();
+</script>
+
+</body>
+</html>
