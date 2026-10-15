@@ -5125,6 +5125,14 @@ function showResult(data){
             peer = result.peer;
             myId = result.id;
 
+            peer.on("error", err=>{
+    if(err.type === "peer-unavailable"){
+        setStatus("joinStatus","الكود غلط أو الـHost قفل الصفحة.","error");
+    }else{
+        setStatus("joinStatus","خطأ: " + err.type,"error");
+    }
+});
+            
             const conn = peer.connect(hostPeerId, {reliable:true, serialization:"json"});
             hostConnection = conn;
             connections.host = conn;
